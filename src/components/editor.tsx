@@ -1,18 +1,11 @@
 import * as React from "react";
 import { useWindowSize } from "../utils/windowSize";
 import { Rect } from "./rect";
+import { reducer, initialState } from "../modules/layer";
 
 const Editor: React.FC<{}> = () => {
   const windowSize = useWindowSize();
-  
-  const src = {
-    id: 1,
-    width: 200,
-    height: 100,
-    positionX: 300,
-    positionY: 300,
-    rotate: 20
-  };
+  const [layers, dispatch] = React.useReducer(reducer, initialState);
 
   return (
     <div>
@@ -21,9 +14,12 @@ const Editor: React.FC<{}> = () => {
         height={windowSize.height}
         viewBox={`0 0 ${windowSize.width} ${windowSize.height}`}
       >
-        <Rect
-          src={src}
-        />
+        {layers.map(layer => (
+          <Rect
+            key={layer.id}
+            src={layer}
+          />
+        ))}
       </svg>
     </div>
   )
