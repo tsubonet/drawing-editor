@@ -7,6 +7,18 @@ const Editor: React.FC<{}> = () => {
   const windowSize = useWindowSize();
   const [layers, dispatch] = React.useReducer(reducer, initialState);
 
+  const onDragStart = () => {
+    console.log("onDragStart");
+  };
+
+  const onMove = () => {
+    console.log("onDragMove");
+  };
+
+  const onDragEnd = () => {
+    console.log("onDragEnd");
+  };
+
   return (
     <div>
       <svg 
@@ -18,6 +30,9 @@ const Editor: React.FC<{}> = () => {
           <Rect
             key={layer.id}
             src={layer}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            onMove={onMove}
           />
         ))}
       </svg>
