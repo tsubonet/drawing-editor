@@ -7,8 +7,8 @@ const Editor: React.FC<{}> = () => {
   const windowSize = useWindowSize();
   const [layers, dispatch] = React.useReducer(reducer, initialState);
 
-  const onDragStart = () => {
-    console.log("onDragStart");
+  const onDragStart = (x, y, e) => {
+    console.log("onDragStart:", x ,y, e);
   };
 
   const onMove = () => {

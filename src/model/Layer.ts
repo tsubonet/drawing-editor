@@ -1,5 +1,5 @@
-type Pixel = number;
-type Radian = number;
+export type Pixel = number;
+export type Radian = number;
 
 export interface Layer {
     id: number;
