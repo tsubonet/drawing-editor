@@ -1,22 +1,25 @@
 import * as React from "react";
 import { useWindowSize } from "../utils/windowSize";
 import { Rect } from "./rect";
-import { reducer, initialState } from "../modules/layer";
+import { reducer, initialState, moveStarted, moved, moveEnded } from "../modules/layer";
 
 const Editor: React.FC<{}> = () => {
   const windowSize = useWindowSize();
   const [layers, dispatch] = React.useReducer(reducer, initialState);
 
-  const onDragStart = (x, y, e) => {
-    console.log("onDragStart:", x ,y, e);
+  const onDragStart = (layerId: number) => {
+    console.log("onDragStart:", layerId);
+    dispatch(moveStarted(layerId));
   };
 
-  const onMove = () => {
-    console.log("onDragMove");
+  const onMove = (layerId: number, dx: number, dy: number) => {
+    console.log("onDragMove", layerId, dx, dy);
+    dispatch(moved(layerId, dx, dy));
   };
 
   const onDragEnd = () => {
     console.log("onDragEnd");
+    dispatch(moveEnded());
   };
 
   return (
