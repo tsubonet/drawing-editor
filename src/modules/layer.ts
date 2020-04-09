@@ -19,14 +19,16 @@ export const initialState = [{
   height: 100,
   positionX: 100,
   positionY: 100,
-  rotate: 0
+  rotate: 0,
+  isSelected: false,
 }, {
   id: 2,
   width: 200,
   height: 100,
   positionX: 400,
   positionY: 400,
-  rotate: 0
+  rotate: 0,
+  isSelected: false,
 }];
 
 export const reducer = (
@@ -34,8 +36,14 @@ export const reducer = (
   action: Actions
   ) => {
     switch (action.type) {
-      case "layer/moveStarted":
-        return state;
+      case "layer/moveStarted": {
+        const { id } = action.payload;
+        const layers = state.map(layer => {
+          layer.isSelected = layer.id === id;
+          return layer;
+        });
+        return layers;
+      }
       case "layer/moved": {
         const {id, dx, dy } = action.payload;
         const layers = state.map(layer => {

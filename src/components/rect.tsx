@@ -24,6 +24,8 @@ const useDrag = (
     const y = e.clientY;
     lastTouch = { x, y };
     onDragStart(layerId);
+    document.addEventListener("pointermove", _onMove);
+    document.addEventListener("pointerup", _onDragEnd);
   }
 
   const _onMove = (e: PointerEvent) => {
@@ -43,16 +45,14 @@ const useDrag = (
 
     lastTouch = null;
     onDragEnd();
+    document.removeEventListener("pointermove", _onMove);
+    document.removeEventListener("pointerup", _onDragEnd);
   }
 
   React.useEffect(() => {
     ref.current?.addEventListener("pointerdown", _onDragStart);
-    ref.current?.addEventListener("pointermove", _onMove);
-    ref.current?.addEventListener("pointerup", _onDragEnd);
     return () => {
       ref.current?.removeEventListener("pointerdown", _onDragStart);
-      ref.current?.removeEventListener("pointermove", _onMove);
-      ref.current?.removeEventListener("pointerup", _onDragEnd);
     }
   }, []);
 
@@ -72,7 +72,7 @@ export const Rect: React.FC<RectProps> = ({ src, onDragStart, onDragEnd, onMove 
       transform={`rotate(${src.rotate})`}
       fill="none"
       stroke="black"
-      strokeWidth="1"
+      strokeWidth={src.isSelected ? 2 : 1}
     />
   );
 };

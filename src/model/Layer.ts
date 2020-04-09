@@ -8,4 +8,5 @@ export interface Layer {
     positionX: Pixel;
     positionY: Pixel;
     rotate: Radian;
+    isSelected: boolean;
 }
