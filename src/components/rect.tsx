@@ -62,17 +62,19 @@ const useDrag = (
 export const Rect: React.FC<RectProps> = ({ src, onDragStart, onDragEnd, onMove }) => {
   const ref = useDrag(src.id, onDragStart, onDragEnd, onMove);
   return (
-    <rect
-      ref={ref}
-      style={{pointerEvents: "visible"}}
-      width={src.width}
-      height={src.height}
-      x={src.positionX}
-      y={src.positionY}
-      transform={`rotate(${src.rotate})`}
-      fill="none"
-      stroke="black"
-      strokeWidth={src.isSelected ? 3 : 1}
-    />
+    <g>
+      <rect
+        ref={ref}
+        style={{pointerEvents: "visible"}}
+        width={src.width}
+        height={src.height}
+        x={src.positionX}
+        y={src.positionY}
+        transform={`rotate(${src.rotate})`}
+        fill="none"
+        stroke="black"
+        strokeWidth={src.isSelected ? 3 : 1}
+      />
+    </g>
   );
 };
