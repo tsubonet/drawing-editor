@@ -8,9 +8,10 @@ interface RectProps {
   onDragStart: (layerId: number) => void;
   onMove: (layerId: number, dx: number, dy: number) => void;
   onDragEnd: () => void;
+  onResized: (layerId: number, dx: number, dy: number) => void;
 }
 
-export const Rect: React.FC<RectProps> = ({ src, onDragStart, onDragEnd, onMove }) => {
+export const Rect: React.FC<RectProps> = ({ src, onDragStart, onDragEnd, onMove, onResized }) => {
   const ref = useDrag(src.id, onDragStart, onDragEnd, onMove);
   return (
     <g>
@@ -28,9 +29,11 @@ export const Rect: React.FC<RectProps> = ({ src, onDragStart, onDragEnd, onMove 
       />
       {src.isSelected && (
         <ResizeHandler
+          layerId={src.id}
           parentSize={[src.width, src.height]}
           positionX={src.positionX}
           positionY={src.positionY}
+          onResized={onResized}
         />
       )}
     </g>

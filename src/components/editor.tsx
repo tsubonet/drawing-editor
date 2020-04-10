@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useWindowSize } from "../utils/windowSize";
 import { Rect } from "./rect";
-import { reducer, initialState, moveStarted, moved, moveEnded } from "../modules/layer";
+import { reducer, initialState, moveStarted, moved, moveEnded, resized } from "../modules/layer";
 
 const Editor: React.FC<{}> = () => {
   const windowSize = useWindowSize();
@@ -22,6 +22,11 @@ const Editor: React.FC<{}> = () => {
     dispatch(moveEnded());
   };
 
+  const onResized = (layerId: number, dx: number, dy: number) => {
+    console.log("onResize", layerId, dx, dy);
+    dispatch(resized(layerId, dx, dy));
+  };
+
   return (
     <div>
       <svg 
@@ -36,6 +41,7 @@ const Editor: React.FC<{}> = () => {
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             onMove={onMove}
+            onResized={onResized}
           />
         ))}
       </svg>

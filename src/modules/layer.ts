@@ -4,6 +4,7 @@ import { Layer, Pixel } from "../model/Layer";
 export const moveStarted = (id: Layer["id"]) => action("layer/moveStarted", { id });
 export const moved = (id: number, dx: Pixel, dy: Pixel) => action("layer/moved", { id, dx, dy });
 export const moveEnded = () => action("layer/moveEnded", {});
+export const resized = (id: number,dx: Pixel, dy: Pixel) => action("layer/resized", { id, dx, dy });
 
 const action = <T extends string, P>(type: T, payload: P) => ({ type, payload })
 
@@ -11,6 +12,7 @@ type Actions = (
   | ReturnType<typeof moveStarted>
   | ReturnType<typeof moved>
   | ReturnType<typeof moveEnded>
+  | ReturnType<typeof resized>
 );
 
 export const initialState = [{
@@ -57,6 +59,18 @@ export const reducer = (
       }
       case "layer/moveEnded":
         return state;
+
+      case "layer/resized": {
+        const {id, dx, dy } = action.payload;
+        const layers = state.map(layer => {
+          if (layer.id === id) {
+            layer.width += dx;
+            layer.height += dy;
+          }
+          return layer;
+        });
+        return layers;
+      }
       default:
         return state;
   }

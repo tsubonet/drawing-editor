@@ -3,22 +3,23 @@ import { Pixel } from "../model/Layer";
 import { useDrag } from "../utils/drag";
 
 interface RectProps {
+  layerId: number;
   parentSize: [Pixel, Pixel];
   positionX: Pixel;
   positionY: Pixel;
-  // onDragStart: (layerId: number) => void;
-  // onMove: (layerId: number, dx: number, dy: number) => void;
-  // onDragEnd: () => void;
+  onResized: (layerId: number, dx: number, dy: number) => void;
 }
 const TOLERANCE = 4 as Pixel;
 const HANDLE_SIZE = 10 as Pixel;
 
-export const ResizeHandler: React.FC<RectProps> = ({ 
+export const ResizeHandler: React.FC<RectProps> = ({
+  layerId,
   parentSize,
   positionX,
   positionY,
+  onResized,
 }) => {
-  // const ref = useDrag(src.id, onDragStart, onDragEnd, onMove);
+  const ref = useDrag(layerId, () => {}, () => {}, onResized);
 
   const [width, height] = parentSize;
   const x = positionX + width - HANDLE_SIZE / 2;
@@ -36,7 +37,7 @@ export const ResizeHandler: React.FC<RectProps> = ({
         y={y}
       />
       <rect
-        //ref={ref}
+        ref={ref}
         fillOpacity="0"
         width={HANDLE_SIZE + TOLERANCE * 2}
         height={HANDLE_SIZE + TOLERANCE * 2}
