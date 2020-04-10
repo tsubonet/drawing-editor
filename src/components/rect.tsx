@@ -72,7 +72,7 @@ export const Rect: React.FC<RectProps> = ({ src, onDragStart, onDragEnd, onMove 
       transform={`rotate(${src.rotate})`}
       fill="none"
       stroke="black"
-      strokeWidth={src.isSelected ? 2 : 1}
+      strokeWidth={src.isSelected ? 3 : 1}
     />
   );
 };
