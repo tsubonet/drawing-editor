@@ -4,9 +4,9 @@ import { useDrag } from "../utils/drag";
 
 interface RectProps {
   layerId: number;
-  parentSize: [Pixel, Pixel];
-  positionX: Pixel;
-  positionY: Pixel;
+  posX: "left" | "right";
+  posY: "top" | "bottom";
+  parentSize: [Pixel, Pixel, Pixel, Pixel];
   onResized: (layerId: number, dx: number, dy: number) => void;
 }
 const TOLERANCE = 4 as Pixel;
@@ -14,16 +14,23 @@ const HANDLE_SIZE = 10 as Pixel;
 
 export const ResizeHandler: React.FC<RectProps> = ({
   layerId,
+  posX,
+  posY,
   parentSize,
-  positionX,
-  positionY,
   onResized,
 }) => {
   const ref = useDrag(layerId, () => {}, () => {}, onResized);
+  const [positionX, positionY, width, height] = parentSize;
 
-  const [width, height] = parentSize;
-  const x = positionX + width - HANDLE_SIZE / 2;
-  const y = positionY + height - HANDLE_SIZE / 2;
+  let x = positionX - HANDLE_SIZE / 2;
+  if (posX === "right") {
+    x += width;
+  }
+
+  let y = positionY - HANDLE_SIZE / 2;
+  if (posY === "bottom") {
+    y += height;
+  }
 
   return (
     <g>

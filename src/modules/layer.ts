@@ -66,6 +66,19 @@ export const reducer = (
           if (layer.id === id) {
             layer.width += dx;
             layer.height += dy;
+
+            // layer.positionX += dx;
+            // layer.positionY += dy;
+            // layer.width -= dx;
+            // layer.height -= dy;
+
+            // layer.positionY += dy;
+            // layer.width += dx;
+            // layer.height -= dy;
+
+            // layer.positionX += dx;
+            // layer.width -= dx;
+            // layer.height += dy;
           }
           return layer;
         });

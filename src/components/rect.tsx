@@ -13,6 +13,21 @@ interface RectProps {
 
 export const Rect: React.FC<RectProps> = ({ src, onDragStart, onDragEnd, onMove, onResized }) => {
   const ref = useDrag(src.id, onDragStart, onDragEnd, onMove);
+
+  const ResizeHandlers =
+    (["top", "bottom"] as const).map(y => (
+      (["left", "right"] as const).map(x => (
+        <ResizeHandler
+          key={y+x}
+          layerId={src.id}
+          posX={x}
+          posY={y}
+          parentSize={[src.positionX, src.positionY, src.width, src.height]}
+          onResized={onResized}
+        />
+     ))
+  ));
+
   return (
     <g>
       <rect
@@ -24,18 +39,10 @@ export const Rect: React.FC<RectProps> = ({ src, onDragStart, onDragEnd, onMove,
         y={src.positionY}
         transform={`rotate(${src.rotate})`}
         fill="none"
-        stroke="black"
+        stroke={src.isSelected ? "rgb(36, 136,253)": "black"}
         strokeWidth="1"
       />
-      {src.isSelected && (
-        <ResizeHandler
-          layerId={src.id}
-          parentSize={[src.width, src.height]}
-          positionX={src.positionX}
-          positionY={src.positionY}
-          onResized={onResized}
-        />
-      )}
+      {src.isSelected && ResizeHandlers}
     </g>
   );
 };
