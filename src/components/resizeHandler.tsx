@@ -19,7 +19,7 @@ export const ResizeHandler: React.FC<RectProps> = ({
   parentSize,
   onResized,
 }) => {
-  const ref = useDrag(layerId, () => {}, () => {}, onResized);
+  const ref = useDrag(layerId, onResized);
   const [positionX, positionY, width, height] = parentSize;
 
   let x = positionX - HANDLE_SIZE / 2;

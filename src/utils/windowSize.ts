@@ -1,15 +1,12 @@
 import React from 'react';
 
-const getSize = () => {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  }
-}
+const getSize = () => ({
+  width: window.innerWidth,
+  height: window.innerHeight,
+});
 
 export const useWindowSize = () => {
   const [windowSize, setWindowSize] = React.useState(getSize());
-
 
   const handleResize = () => {
     setWindowSize(getSize());
@@ -22,4 +19,4 @@ export const useWindowSize = () => {
   }, []);
 
   return windowSize;
-}
+};

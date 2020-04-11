@@ -1,51 +1,77 @@
 import * as React from "react";
 import { Layer, Pixel } from "../model/Layer";
 
-export const useDrag = (
-  layerId: number,
-  onDragStart: (layerId: number) => void,
-  onDragEnd: () => void,
-  onMove: (layerId: number, dx: number, dy: number) => void
-) => {
-  const ref = React.useRef<SVGRectElement | null>(null);
-  let lastTouch: { x: Pixel, y: Pixel } | null = null;
 
-  const _onDragStart = (e: PointerEvent) => {
+class Draggable {
+
+  private lastTouch: { x: Pixel, y: Pixel } | null = null;
+
+  constructor(
+    private element: SVGRectElement,
+    private layerId: number,
+    private onMove: (layerId: number, dx: number, dy: number) => void,
+    private onDragStart?: (layerId: number) => void,
+    private onDragEnd?: () => void,
+  ) {
+    element.addEventListener("pointerdown", this._onDragStart);
+  }
+
+  destroy() {
+    this.element.removeEventListener("pointerdown", this._onDragStart);
+  }
+
+  private _onDragStart = (e: PointerEvent) => {
     e.stopPropagation();
 
     const x = e.clientX;
     const y = e.clientY;
-    lastTouch = { x, y };
-    onDragStart(layerId);
-    document.addEventListener("pointermove", _onMove);
-    document.addEventListener("pointerup", _onDragEnd);
+    this.lastTouch = { x, y };
+    this.onDragStart?.(this.layerId);
+    document.addEventListener("pointermove", this._onMove);
+    document.addEventListener("pointerup", this._onDragEnd);
   }
 
-  const _onMove = (e: PointerEvent) => {
+  private _onMove = (e: PointerEvent) => {
     e.stopPropagation();
-    if (!lastTouch) {
+    if (!this.lastTouch) {
       return;
     }
 
     const x = e.clientX;
     const y = e.clientY;
-    onMove(layerId, x - lastTouch.x, y - lastTouch.y);
-    lastTouch = { x, y };
+    this.onMove(this.layerId, x - this.lastTouch.x, y - this.lastTouch.y);
+    this.lastTouch = { x, y };
   }
 
-  const _onDragEnd = (e: PointerEvent) => {
+  private _onDragEnd = (e: PointerEvent) => {
     e.stopPropagation();
 
-    lastTouch = null;
-    onDragEnd();
-    document.removeEventListener("pointermove", _onMove);
-    document.removeEventListener("pointerup", _onDragEnd);
+    this.lastTouch = null;
+    this.onDragEnd?.();
+    document.removeEventListener("pointermove", this._onMove);
+    document.removeEventListener("pointerup", this._onDragEnd);
   }
+}
+
+
+export const useDrag = (
+  layerId: number,
+  onMove: (layerId: number, dx: number, dy: number) => void,
+  onDragStart?: (layerId: number) => void,
+  onDragEnd?: () => void,
+) => {
+  const ref = React.useRef<SVGRectElement | null>(null);
 
   React.useEffect(() => {
-    ref.current?.addEventListener("pointerdown", _onDragStart);
+    const draggable = new Draggable(
+      ref.current!,
+      layerId,
+      onMove,
+      onDragStart,
+      onDragEnd,
+    );
     return () => {
-      ref.current?.removeEventListener("pointerdown", _onDragStart);
+      draggable.destroy();
     }
   }, []);
 

@@ -12,7 +12,7 @@ interface RectProps {
 }
 
 export const Rect: React.FC<RectProps> = ({ src, onDragStart, onDragEnd, onMove, onResized }) => {
-  const ref = useDrag(src.id, onDragStart, onDragEnd, onMove);
+  const ref = useDrag(src.id, onMove, onDragStart, onDragEnd);
 
   const ResizeHandlers =
     (["top", "bottom"] as const).map(y => (
