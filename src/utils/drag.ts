@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Layer, Pixel } from "../model/Layer";
+import { Pixel } from "../model/Layer";
 
 
 class Draggable {
@@ -8,7 +8,7 @@ class Draggable {
 
   constructor(
     private element: SVGRectElement,
-    private onMove: (dx: number, dy: number) => void,
+    private onMove: (dx: Pixel, dy: Pixel) => void,
     private onDragStart?: () => void,
     private onDragEnd?: () => void,
   ) {
@@ -22,8 +22,8 @@ class Draggable {
   private _onDragStart = (e: PointerEvent) => {
     e.stopPropagation();
 
-    const x = e.clientX;
-    const y = e.clientY;
+    const x = Math.round(e.clientX);
+    const y = Math.round(e.clientY);
     this.lastTouch = { x, y };
     this.onDragStart?.();
     document.addEventListener("pointermove", this._onMove);
@@ -36,8 +36,8 @@ class Draggable {
       return;
     }
 
-    const x = e.clientX;
-    const y = e.clientY;
+    const x = Math.round(e.clientX);
+    const y = Math.round(e.clientY);
     this.onMove(x - this.lastTouch.x, y - this.lastTouch.y);
     this.lastTouch = { x, y };
   }
