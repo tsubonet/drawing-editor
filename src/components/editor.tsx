@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useWindowSize } from "../utils/windowSize";
+import { PosX, PosY } from "../model/layer";
 import { Rect } from "./rect";
 import { reducer, initialState, moveStarted, moved, moveEnded, resized } from "../modules/layer";
 
@@ -12,9 +13,9 @@ const Editor: React.FC<{}> = () => {
     dispatch(moveStarted(layerId));
   };
 
-  const onMove = (layerId: number, dx: number, dy: number) => {
-    console.log("onDragMove", layerId, dx, dy);
-    dispatch(moved(layerId, dx, dy));
+  const onMove = (dx: number, dy: number, layerId: number) => {
+    console.log("onDragMove", dx, dy, layerId);
+    dispatch(moved(dx, dy, layerId));
   };
 
   const onDragEnd = () => {
@@ -22,9 +23,9 @@ const Editor: React.FC<{}> = () => {
     dispatch(moveEnded());
   };
 
-  const onResized = (layerId: number, dx: number, dy: number) => {
-    console.log("onResize", layerId, dx, dy);
-    dispatch(resized(layerId, dx, dy));
+  const onResized = (dx: number, dy: number, layerId: number, posX: PosX, posY: PosY) => {
+    console.log("onResize", dx, dy, layerId, posX, posY);
+    dispatch(resized(dx, dy, layerId, posX, posY));
   };
 
   return (

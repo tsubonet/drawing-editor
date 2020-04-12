@@ -1,6 +1,9 @@
 export type Pixel = number;
 export type Radian = number;
 
+export type PosX = "left" | "right";
+export type PosY = "top" | "bottom";
+
 export interface Layer {
     id: number;
     width: Pixel;

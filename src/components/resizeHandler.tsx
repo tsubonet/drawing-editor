@@ -1,26 +1,27 @@
 import * as React from "react";
-import { Pixel } from "../model/Layer";
+import { Pixel, Layer, PosX, PosY } from "../model/Layer";
 import { useDrag } from "../utils/drag";
 
 interface RectProps {
-  layerId: number;
-  posX: "left" | "right";
-  posY: "top" | "bottom";
-  parentSize: [Pixel, Pixel, Pixel, Pixel];
-  onResized: (layerId: number, dx: number, dy: number) => void;
+  posX: PosX;
+  posY: PosY;
+  src: Layer;
+  onResized: (dx: number, dy: number, layerId: number, posX: PosX, posY: PosY) => void;
 }
 const TOLERANCE = 4 as Pixel;
 const HANDLE_SIZE = 10 as Pixel;
 
 export const ResizeHandler: React.FC<RectProps> = ({
-  layerId,
   posX,
   posY,
-  parentSize,
+  src,
   onResized,
 }) => {
-  const ref = useDrag(layerId, onResized);
-  const [positionX, positionY, width, height] = parentSize;
+  const { id, positionX, positionY, width, height } = src;
+
+  const ref = useDrag(
+    (dx, dy) => onResized(dx, dy, id, posX, posY)
+  );
 
   let x = positionX - HANDLE_SIZE / 2;
   if (posX === "right") {

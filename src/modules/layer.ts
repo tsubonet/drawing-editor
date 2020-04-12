@@ -1,10 +1,11 @@
 import * as React from "react";
-import { Layer, Pixel } from "../model/Layer";
+import { Layer, Pixel, PosX, PosY } from "../model/Layer";
 
 export const moveStarted = (id: Layer["id"]) => action("layer/moveStarted", { id });
-export const moved = (id: number, dx: Pixel, dy: Pixel) => action("layer/moved", { id, dx, dy });
+export const moved = (dx: Pixel, dy: Pixel, id: number) => action("layer/moved", { dx, dy, id });
 export const moveEnded = () => action("layer/moveEnded", {});
-export const resized = (id: number,dx: Pixel, dy: Pixel) => action("layer/resized", { id, dx, dy });
+export const resized = (dx: Pixel, dy: Pixel, id: number, posX: PosX, posY: PosY) =>
+  action("layer/resized", { id, dx, dy, posX, posY });
 
 const action = <T extends string, P>(type: T, payload: P) => ({ type, payload })
 
@@ -61,21 +62,39 @@ export const reducer = (
         return state;
 
       case "layer/resized": {
-        const {id, dx, dy } = action.payload;
+        const {id, posX, posY, dx, dy } = action.payload;
         const layers = state.map(layer => {
           if (layer.id === id) {
-            layer.width += dx;
-            layer.height += dy;
 
+            if (posY === "bottom") {
+              layer.height += dy;
+            } else {
+              layer.positionY += dy;
+              layer.height -= dy;
+            }
+
+            if (posX === "right") {
+              layer.width += dx;
+            } else {
+              layer.positionX += dx;
+              layer.width -= dx;
+            }
+            // right, bottom
+            // layer.width += dx;
+            // layer.height += dy;
+            
+            // left, top
             // layer.positionX += dx;
             // layer.positionY += dy;
             // layer.width -= dx;
             // layer.height -= dy;
 
+            // right, top
             // layer.positionY += dy;
             // layer.width += dx;
             // layer.height -= dy;
-
+            
+            // left, bottom
             // layer.positionX += dx;
             // layer.width -= dx;
             // layer.height += dy;

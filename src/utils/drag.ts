@@ -8,9 +8,8 @@ class Draggable {
 
   constructor(
     private element: SVGRectElement,
-    private layerId: number,
-    private onMove: (layerId: number, dx: number, dy: number) => void,
-    private onDragStart?: (layerId: number) => void,
+    private onMove: (dx: number, dy: number) => void,
+    private onDragStart?: () => void,
     private onDragEnd?: () => void,
   ) {
     element.addEventListener("pointerdown", this._onDragStart);
@@ -26,7 +25,7 @@ class Draggable {
     const x = e.clientX;
     const y = e.clientY;
     this.lastTouch = { x, y };
-    this.onDragStart?.(this.layerId);
+    this.onDragStart?.();
     document.addEventListener("pointermove", this._onMove);
     document.addEventListener("pointerup", this._onDragEnd);
   }
@@ -39,7 +38,7 @@ class Draggable {
 
     const x = e.clientX;
     const y = e.clientY;
-    this.onMove(this.layerId, x - this.lastTouch.x, y - this.lastTouch.y);
+    this.onMove(x - this.lastTouch.x, y - this.lastTouch.y);
     this.lastTouch = { x, y };
   }
 
@@ -55,9 +54,8 @@ class Draggable {
 
 
 export const useDrag = (
-  layerId: number,
-  onMove: (layerId: number, dx: number, dy: number) => void,
-  onDragStart?: (layerId: number) => void,
+  onMove: (dx: number, dy: number) => void,
+  onDragStart?: () => void,
   onDragEnd?: () => void,
 ) => {
   const ref = React.useRef<SVGRectElement | null>(null);
@@ -65,7 +63,6 @@ export const useDrag = (
   React.useEffect(() => {
     const draggable = new Draggable(
       ref.current!,
-      layerId,
       onMove,
       onDragStart,
       onDragEnd,
