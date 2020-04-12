@@ -12,7 +12,7 @@ class Draggable {
     private onDragStart?: () => void,
     private onDragEnd?: () => void,
   ) {
-    element.addEventListener("pointerdown", this._onDragStart);
+    element.addEventListener("pointerdown", this._onDragStart, { passive: true });
   }
 
   destroy() {
@@ -26,8 +26,8 @@ class Draggable {
     const y = Math.round(e.clientY);
     this.lastTouch = { x, y };
     this.onDragStart?.();
-    document.addEventListener("pointermove", this._onMove);
-    document.addEventListener("pointerup", this._onDragEnd);
+    document.addEventListener("pointermove", this._onMove, { passive: true });
+    document.addEventListener("pointerup", this._onDragEnd, { passive: true });
   }
 
   private _onMove = (e: PointerEvent) => {
