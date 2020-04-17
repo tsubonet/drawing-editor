@@ -2,7 +2,7 @@ import * as React from "react";
 import { useWindowSize } from "../utils/windowSize";
 import { PosX, PosY } from "../model/layer";
 import { Rect } from "./rect";
-import { reducer, initialState, moveStarted, moved, moveEnded, resized } from "../modules/layer";
+import { reducer, initialState, moveStarted, moved, moveEnded, resized, rotated } from "../modules/layer";
 
 const Editor: React.FC<{}> = () => {
   const windowSize = useWindowSize();
@@ -28,6 +28,11 @@ const Editor: React.FC<{}> = () => {
     dispatch(resized(dx, dy, layerId, posX, posY));
   };
 
+  const onRotated = (layerId: number, nextTheta: number) => {
+    console.log("onRotate", layerId, nextTheta);
+    dispatch(rotated(layerId, nextTheta));
+  };
+
   return (
     <div>
       <svg 
@@ -43,6 +48,7 @@ const Editor: React.FC<{}> = () => {
             onDragEnd={onDragEnd}
             onMove={onMove}
             onResized={onResized}
+            onRotated={onRotated}
           />
         ))}
       </svg>

@@ -8,7 +8,7 @@ class Draggable {
 
   constructor(
     private element: SVGRectElement,
-    private onMove: (dx: Pixel, dy: Pixel) => void,
+    private onMove: (dx: Pixel, dy: Pixel, x: Pixel, y: Pixel) => void,
     private onDragStart?: () => void,
     private onDragEnd?: () => void,
   ) {
@@ -38,7 +38,7 @@ class Draggable {
 
     const x = Math.round(e.clientX);
     const y = Math.round(e.clientY);
-    this.onMove(x - this.lastTouch.x, y - this.lastTouch.y);
+    this.onMove(x - this.lastTouch.x, y - this.lastTouch.y, x, y);
     this.lastTouch = { x, y };
   }
 
@@ -54,7 +54,7 @@ class Draggable {
 
 
 export const useDrag = (
-  onMove: (dx: number, dy: number) => void,
+  onMove: (dx: number, dy: number, x: Pixel, y: Pixel) => void,
   onDragStart?: () => void,
   onDragEnd?: () => void,
 ) => {

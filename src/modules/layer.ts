@@ -6,6 +6,8 @@ export const moved = (dx: Pixel, dy: Pixel, id: number) => action("layer/moved",
 export const moveEnded = () => action("layer/moveEnded", {});
 export const resized = (dx: Pixel, dy: Pixel, id: number, posX: PosX, posY: PosY) =>
   action("layer/resized", { id, dx, dy, posX, posY });
+export const rotated = (id: number, nextTheta: number) =>
+  action("layer/rotated", { id, nextTheta });
 
 const action = <T extends string, P>(type: T, payload: P) => ({ type, payload })
 
@@ -14,6 +16,7 @@ type Actions = (
   | ReturnType<typeof moved>
   | ReturnType<typeof moveEnded>
   | ReturnType<typeof resized>
+  | ReturnType<typeof rotated>
 );
 
 export const initialState = [{
@@ -98,6 +101,16 @@ export const reducer = (
             // layer.positionX += dx;
             // layer.width -= dx;
             // layer.height += dy;
+          }
+          return layer;
+        });
+        return layers;
+      }
+      case "layer/rotated": {
+        const {id, nextTheta } = action.payload;
+        const layers = state.map(layer => {
+          if (layer.id === id) {
+            layer.rotate = nextTheta;
           }
           return layer;
         });
