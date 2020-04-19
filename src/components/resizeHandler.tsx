@@ -19,10 +19,6 @@ export const ResizeHandler: React.FC<RectProps> = ({
 }) => {
   const { id, positionX, positionY, width, height } = src;
 
-  if (posX === "center" && posY === "middle") {
-    return null;
-  }
-
   const ref = useDrag(
     (dx, dy) => onResized(dx, dy, id, posX, posY)
   );
@@ -40,7 +36,6 @@ export const ResizeHandler: React.FC<RectProps> = ({
   } else if (posY === "bottom") {
     y += height;
   }
-
 
   return (
     <g>

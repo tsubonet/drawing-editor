@@ -29,15 +29,20 @@ export const Rect: React.FC<RectProps> = ({
 
   const ResizeHandlers =
     (["top", "middle", "bottom"] as const).map(y => (
-      (["left", "center", "right"] as const).map(x => (
-        <ResizeHandler
-          key={y+x}
-          posX={x}
-          posY={y}
-          src={src}
-          onResized={onResized}
-        />
-     ))
+      (["left", "center", "right"] as const).map(x => {
+        if (y === "middle" && x === "center") {
+          return null;
+        }
+        return (
+          <ResizeHandler
+            key={y+x}
+            posX={x}
+            posY={y}
+            src={src}
+            onResized={onResized}
+          />
+        );
+      })
   ));
 
   return (
