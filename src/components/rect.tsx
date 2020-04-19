@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Layer, PosX, PosY } from "../model/Layer";
+import { Layer, Pixel, PosX, PosY, Radian } from "../model/Layer";
 import { ResizeHandler } from "./resizeHandler";
 import { RotateHandler } from "./rotateHandler";
 import { useDrag } from "../utils/drag";
@@ -7,10 +7,10 @@ import { useDrag } from "../utils/drag";
 interface RectProps {
   src: Layer;
   onDragStart: (layerId: number) => void;
-  onMove: (dx: number, dy: number, layerId: number) => void;
+  onMove: (dx: Pixel, dy: Pixel, layerId: number) => void;
   onDragEnd: () => void;
-  onResized: (dx: number, dy: number, layerId: number, posX: PosX, posY: PosY) => void;
-  onRotated: (layerId: number, nextTheta: number) => void;
+  onResized: (dx: Pixel, dy: Pixel, layerId: number, posX: PosX, posY: PosY) => void;
+  onRotated: (layerId: number, nextTheta: Radian) => void;
 }
 
 export const Rect: React.FC<RectProps> = ({ 
@@ -28,8 +28,8 @@ export const Rect: React.FC<RectProps> = ({
   );
 
   const ResizeHandlers =
-    (["top", "bottom"] as const).map(y => (
-      (["left", "right"] as const).map(x => (
+    (["top", "middle", "bottom"] as const).map(y => (
+      (["left", "center", "right"] as const).map(x => (
         <ResizeHandler
           key={y+x}
           posX={x}

@@ -1,12 +1,12 @@
-import * as React from "react";
-import { Layer, Pixel, PosX, PosY } from "../model/Layer";
+import { Layer, Pixel, PosX, PosY, Radian } from "../model/Layer";
+import { radianToDeg } from "../utils/layer";
 
 export const moveStarted = (id: Layer["id"]) => action("layer/moveStarted", { id });
 export const moved = (dx: Pixel, dy: Pixel, id: number) => action("layer/moved", { dx, dy, id });
 export const moveEnded = () => action("layer/moveEnded", {});
 export const resized = (dx: Pixel, dy: Pixel, id: number, posX: PosX, posY: PosY) =>
   action("layer/resized", { id, dx, dy, posX, posY });
-export const rotated = (id: number, nextTheta: number) =>
+export const rotated = (id: number, nextTheta: Radian) =>
   action("layer/rotated", { id, nextTheta });
 
 const action = <T extends string, P>(type: T, payload: P) => ({ type, payload })
@@ -71,36 +71,17 @@ export const reducer = (
 
             if (posY === "bottom") {
               layer.height += dy;
-            } else {
+            } else if (posY === "top") {
               layer.positionY += dy;
               layer.height -= dy;
             }
 
             if (posX === "right") {
               layer.width += dx;
-            } else {
+            } else if (posX === "left") {
               layer.positionX += dx;
               layer.width -= dx;
             }
-            // right, bottom
-            // layer.width += dx;
-            // layer.height += dy;
-            
-            // left, top
-            // layer.positionX += dx;
-            // layer.positionY += dy;
-            // layer.width -= dx;
-            // layer.height -= dy;
-
-            // right, top
-            // layer.positionY += dy;
-            // layer.width += dx;
-            // layer.height -= dy;
-            
-            // left, bottom
-            // layer.positionX += dx;
-            // layer.width -= dx;
-            // layer.height += dy;
           }
           return layer;
         });
@@ -108,9 +89,11 @@ export const reducer = (
       }
       case "layer/rotated": {
         const {id, nextTheta } = action.payload;
+        const nextDegree = radianToDeg(nextTheta);
+
         const layers = state.map(layer => {
           if (layer.id === id) {
-            layer.rotate = nextTheta;
+            layer.rotate = nextDegree + 90;
           }
           return layer;
         });
@@ -120,4 +103,3 @@ export const reducer = (
         return state;
   }
 };
-  

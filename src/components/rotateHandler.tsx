@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Pixel, Layer } from "../model/Layer";
+import { Layer, Radian } from "../model/Layer";
 import { useDrag } from "../utils/drag";
 
 interface RectProps {
   src: Layer;
-  onRotated: (layerId: number, nextTheta: number) => void;
+  onRotated: (layerId: number, nextTheta: Radian) => void;
 }
 
 export const RotateHandler: React.FC<RectProps> = ({
@@ -21,25 +21,12 @@ export const RotateHandler: React.FC<RectProps> = ({
       const vx = x - cx;
       const vy = y - cy;
       const nextTheta = Math.atan2(vy, vx);
-      console.log("nextTheta", nextTheta);
-      
-      const nextDegree = radianToDeg(nextTheta);
-      console.log(nextDegree);
-      onRotated(id, nextDegree + 90);
+      onRotated(id, nextTheta);
     }
   );
 
-  const radianToDeg = (radian: number) => {
-    return radian * 180 / Math.PI;
-  }
-
-  const degToRadian = (deg: number) => {
-    return deg * Math.PI / 180;
-  }
-
   return (
-    // 
-    <g transform={`translate(${cx - 10}, ${positionY - 20}) scale(1.333)`}>
+    <g transform={`translate(${cx - 9}, ${positionY - 24.5}) scale(1.3333333333)`}>
       <line x1="7" y1="11" x2="7" y2="15" stroke="rgb(36, 136,253)" strokeWidth="0.75"></line>
       <path d="M11.35,7.6A5.06,5.06,0,0,1,1.66,5.86m.42-2.42A5,5,0,0,1,6.72.38a5.1,5.1,0,0,1,5.07,5.13" fill="none" stroke="#2488fd" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.75"></path>
       <polyline points="0.38 6.76 1.08 5.86 1.78 4.95 2.48 5.86 3.18 6.76" fill="none" stroke="#2488fd" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.75"></polyline>
@@ -47,8 +34,8 @@ export const RotateHandler: React.FC<RectProps> = ({
       <rect
         ref={ref}
         fillOpacity="0"
-        width={20}
-        height={20}
+        width={14}
+        height={14}
         // x={x - TOLERANCE}
         // y={y - TOLERANCE}
         style={{ cursor: "pointer" }}

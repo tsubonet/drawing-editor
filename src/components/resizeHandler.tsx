@@ -6,7 +6,7 @@ interface RectProps {
   posX: PosX;
   posY: PosY;
   src: Layer;
-  onResized: (dx: number, dy: number, layerId: number, posX: PosX, posY: PosY) => void;
+  onResized: (dx: Pixel, dy: Pixel, layerId: number, posX: PosX, posY: PosY) => void;
 }
 const TOLERANCE = 4 as Pixel;
 const HANDLE_SIZE = 10 as Pixel;
@@ -19,19 +19,28 @@ export const ResizeHandler: React.FC<RectProps> = ({
 }) => {
   const { id, positionX, positionY, width, height } = src;
 
+  if (posX === "center" && posY === "middle") {
+    return null;
+  }
+
   const ref = useDrag(
     (dx, dy) => onResized(dx, dy, id, posX, posY)
   );
 
   let x = positionX - HANDLE_SIZE / 2;
-  if (posX === "right") {
+  if (posX === "center") {
+    x += width / 2;
+  } else if (posX === "right") {
     x += width;
   }
 
   let y = positionY - HANDLE_SIZE / 2;
-  if (posY === "bottom") {
+  if (posY === "middle") {
+    y += height / 2;
+  } else if (posY === "bottom") {
     y += height;
   }
+
 
   return (
     <g>
