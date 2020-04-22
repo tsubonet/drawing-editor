@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Pixel, Layer, PosX, PosY } from "../model/Layer";
+import { Pixel, Layer, PosX, PosY } from "../model/layer";
 import { useDrag } from "../utils/drag";
+import { degToRadian, rotateVector, transformRotate } from "../utils/layer";
 
 interface RectProps {
   posX: PosX;
@@ -17,10 +18,15 @@ export const ResizeHandler: React.FC<RectProps> = ({
   src,
   onResized,
 }) => {
-  const { id, positionX, positionY, width, height } = src;
+  const { id, positionX, positionY, width, height, rotate } = src;
 
   const ref = useDrag(
-    (dx, dy) => onResized(dx, dy, id, posX, posY)
+    (dx, dy) => {
+      const cx = positionX + width / 2;
+      const cy = positionY + height / 2;
+      const [_dx, _dy] = transformRotate(rotate, [cx, cy], [dx, dy]);
+      onResized(_dx, _dy, id, posX, posY)
+    }
   );
 
   let x = positionX - HANDLE_SIZE / 2;

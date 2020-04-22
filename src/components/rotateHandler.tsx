@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Layer, Radian } from "../model/Layer";
+import { Layer, Radian } from "../model/layer";
 import { useDrag } from "../utils/drag";
 
 interface RectProps {

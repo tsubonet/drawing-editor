@@ -1,12 +1,19 @@
-import { Layer, Pixel, PosX, PosY, Radian } from "../model/Layer";
+import { Layer, Pixel, PosX, PosY, Radian } from "../model/layer";
 import { radianToDeg } from "../utils/layer";
 
-export const moveStarted = (id: Layer["id"]) => action("layer/moveStarted", { id });
-export const moved = (dx: Pixel, dy: Pixel, id: number) => action("layer/moved", { dx, dy, id });
-export const moveEnded = () => action("layer/moveEnded", {});
-export const resized = (dx: Pixel, dy: Pixel, id: number, posX: PosX, posY: PosY) =>
+export const moveStarted = (id: Layer["id"]) =>
+  action("layer/moveStarted", { id });
+
+export const moved = (dx: Pixel, dy: Pixel, id: Layer["id"]) =>
+  action("layer/moved", { dx, dy, id });
+
+export const moveEnded = () =>
+  action("layer/moveEnded", {});
+
+export const resized = (dx: Pixel, dy: Pixel, id: Layer["id"], posX: PosX, posY: PosY) =>
   action("layer/resized", { id, dx, dy, posX, posY });
-export const rotated = (id: number, nextTheta: Radian) =>
+
+export const rotated = (id: Layer["id"], nextTheta: Radian) =>
   action("layer/rotated", { id, nextTheta });
 
 const action = <T extends string, P>(type: T, payload: P) => ({ type, payload })

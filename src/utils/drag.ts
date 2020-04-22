@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Pixel } from "../model/Layer";
+import { Pixel } from "../model/layer";
 
 
 class Draggable {
