@@ -22,10 +22,10 @@ export const ResizeHandler: React.FC<RectProps> = ({
   onDragEnd,
   onResized,
 }) => {
-  const { positionX, positionY, width, height, rotate } = src;
+  const { id, positionX, positionY, width, height, rotate } = src;
 
   const ref = useDrag(
-    () => onDragStart(src.id),
+    () => onDragStart(id),
     onDragEnd,
     (dx, dy) => {
       const cx = positionX + width / 2;

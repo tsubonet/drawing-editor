@@ -13,8 +13,8 @@ export const moved = (dx: Pixel, dy: Pixel) =>
 export const resized = (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) =>
   action("layer/resized", { dx, dy, posX, posY });
 
-export const rotated = (id: Layer["id"], nextTheta: Radian) =>
-  action("layer/rotated", { id, nextTheta });
+export const rotated = (nextTheta: Radian) =>
+  action("layer/rotated", { nextTheta });
 
 const action = <T extends string, P>(type: T, payload: P) => ({ type, payload })
 
@@ -69,27 +69,28 @@ export const reducer = (
           return state;
         }
 
-        const { width, height, positionX, positionY, rotate } = selectedLayer;
-          const initialTransforms = {
-            [id]: {
-              width,
-              height,
-              positionX,
-              positionY,
-              rotate
-            }
+        const initialTransforms = {
+          [id]: {
+            width: selectedLayer.width,
+            height: selectedLayer.height,
+            positionX: selectedLayer.positionX,
+            positionY: selectedLayer.positionY,
+            rotate: selectedLayer.rotate
           }
+        };
         
-        const layers = state.layers.map(layer => {
-          layer.isSelected = layer.id === id;
-          return layer;
-        });
+        const layers = state.layers.map(layer => ({
+          ...layer, 
+          isSelected: layer.id === id
+        }));
         return { ...state, layers, initialTransforms }
       }
+
       case "layer/dragEnded": {
         const initialTransforms = {};
         return { ...state, initialTransforms }
       }
+
       case "layer/moved": {
         const { dx, dy } = action.payload;
         const layers = state.layers.map(layer => {
@@ -103,6 +104,7 @@ export const reducer = (
         });
         return { ...state, layers }
       }
+
       case "layer/resized": {
         const { posX, posY, dx, dy } = action.payload;
         const layers = state.layers.map(layer => {
@@ -128,18 +130,21 @@ export const reducer = (
         });
         return { ...state, layers }
       }
+
       case "layer/rotated": {
-        const {id, nextTheta } = action.payload;
+        const { nextTheta } = action.payload;
         const nextDegree = radianToDeg(nextTheta);
 
         const layers = state.layers.map(layer => {
-          if (layer.id === id) {
+          const transform = state.initialTransforms[layer.id];
+          if (transform) {
             layer.rotate = nextDegree + 90;
           }
           return layer;
         });
         return { ...state, layers }
       }
+
       default:
         return state;
   }

@@ -28,9 +28,9 @@ const Editor: React.FC<{}> = () => {
     dispatch(resized(dx, dy, posX, posY));
   };
 
-  const onRotated = (layerId: number, nextTheta: number) => {
-    console.log("onRotate", layerId, nextTheta);
-    dispatch(rotated(layerId, nextTheta));
+  const onRotated = (nextTheta: number) => {
+    console.log("onRotate", nextTheta);
+    dispatch(rotated(nextTheta));
   };
 
   return (

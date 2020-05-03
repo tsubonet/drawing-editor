@@ -10,7 +10,7 @@ interface RectProps {
   onDragEnd: () => void;
   onMoved: (dx: Pixel, dy: Pixel) => void;
   onResized: (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) => void;
-  onRotated: (layerId: number, nextTheta: Radian) => void;
+  onRotated: (nextTheta: Radian) => void;
 }
 
 export const Rect: React.FC<RectProps> = ({ 
