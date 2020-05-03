@@ -10,7 +10,7 @@ class Draggable {
     private element: SVGRectElement,
     private onDragStart: () => void,
     private onDragEnd: () => void,
-    private onMove: (dx: Pixel, dy: Pixel, x: Pixel, y: Pixel) => void,
+    private onMove: (dx: Pixel, dy: Pixel, x: Pixel, y: Pixel, isPressShiftKey: boolean) => void,
   ) {
     element.addEventListener("pointerdown", this._onDragStart, { passive: true });
   }
@@ -38,7 +38,7 @@ class Draggable {
 
     const x = Math.round(e.clientX);
     const y = Math.round(e.clientY);
-    this.onMove(x - this.initialTouch.x, y - this.initialTouch.y, x, y);
+    this.onMove(x - this.initialTouch.x, y - this.initialTouch.y, x, y, e.shiftKey);
   }
 
   private _onDragEnd = (e: PointerEvent) => {
@@ -55,7 +55,7 @@ class Draggable {
 export const useDrag = (
   onDragStart: () => void,
   onDragEnd: () => void,
-  onMove: (dx: number, dy: number, x: Pixel, y: Pixel) => void,
+  onMove: (dx: number, dy: number, x: Pixel, y: Pixel, isPressShiftKey: boolean) => void,
 ) => {
   const ref = React.useRef<SVGRectElement | null>(null);
 

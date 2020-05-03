@@ -23,9 +23,9 @@ const Editor: React.FC<{}> = () => {
     dispatch(moved(dx, dy));
   };
 
-  const onResized = (dx: number, dy: number, posX: PosX, posY: PosY) => {
-    console.log("onResize", dx, dy, posX, posY);
-    dispatch(resized(dx, dy, posX, posY));
+  const onResized = (dx: number, dy: number, posX: PosX, posY: PosY, keepAspectRatio: boolean) => {
+    console.log("onResize", dx, dy, posX, posY, keepAspectRatio);
+    dispatch(resized(dx, dy, posX, posY, keepAspectRatio));
   };
 
   const onRotated = (nextTheta: number) => {

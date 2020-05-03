@@ -9,7 +9,7 @@ interface RectProps {
   src: Layer;
   onDragStart: (layerId: number) => void;
   onDragEnd: () => void;
-  onResized: (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) => void;
+  onResized: (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY, keepAspectRatio: boolean) => void;
 }
 const TOLERANCE = 4 as Pixel;
 const HANDLE_SIZE = 10 as Pixel;
@@ -27,11 +27,11 @@ export const ResizeHandler: React.FC<RectProps> = ({
   const ref = useDrag(
     () => onDragStart(id),
     () => onDragEnd(),
-    (dx, dy) => {
+    (dx, dy, x, y, keepAspectRatio) => {
       const cx = positionX + width / 2;
       const cy = positionY + height / 2;
       const [_dx, _dy] = transformRotate(rotate, [cx, cy], [dx, dy]);
-      onResized(_dx, _dy, posX, posY)
+      onResized(_dx, _dy, posX, posY, keepAspectRatio)
     },
   );
 

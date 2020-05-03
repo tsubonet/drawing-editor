@@ -9,7 +9,7 @@ interface RectProps {
   onDragStart: (layerId: number) => void;
   onDragEnd: () => void;
   onMoved: (dx: Pixel, dy: Pixel) => void;
-  onResized: (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) => void;
+  onResized: (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY, keepAspectRatio: boolean) => void;
   onRotated: (nextTheta: Radian) => void;
 }
 

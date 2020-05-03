@@ -10,8 +10,8 @@ export const dragEnded = () =>
 export const moved = (dx: Pixel, dy: Pixel) =>
   action("layer/moved", { dx, dy });
 
-export const resized = (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) =>
-  action("layer/resized", { dx, dy, posX, posY });
+export const resized = (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY, keepAspectRatio: boolean) =>
+  action("layer/resized", { dx, dy, posX, posY, keepAspectRatio });
 
 export const rotated = (nextTheta: Radian) =>
   action("layer/rotated", { nextTheta });
@@ -106,24 +106,38 @@ export const reducer = (
       }
 
       case "layer/resized": {
-        const { posX, posY, dx, dy } = action.payload;
+        const { posX, posY, dx, dy, keepAspectRatio } = action.payload;
         const layers = state.layers.map(layer => {
           const transform = state.initialTransforms[layer.id];
           if (transform) {
             const { width, height, positionX, positionY } = transform;
 
             if (posY === "bottom") {
-              layer.height = height + dy;
+              if (keepAspectRatio && posX === "right") {
+                layer.height = (width + dx) / width * height;
+              } else if (keepAspectRatio && posX === "left") {
+                layer.height = (width - dx) / width * height;
+              } else {
+                layer.height = height + dy;
+              }
             } else if (posY === "top") {
-              layer.positionY = positionY + dy;
-              layer.height = positionY - dy;
+              if (keepAspectRatio && posX === "right") {
+                layer.height = (width + dx) / width * height;
+                layer.positionY = positionY - ( dx / width * height);
+              } else if (keepAspectRatio && posX === "left") {
+                layer.height = (width - dx) / width * height;
+                layer.positionY = positionY - ( - dx / width * height);
+              } else {
+                layer.height = height - dy;
+                layer.positionY = positionY + dy;
+              }
             }
 
             if (posX === "right") {
               layer.width = width + dx;
             } else if (posX === "left") {
-              layer.positionX = positionX + dx;
               layer.width = width - dx;
+              layer.positionX = positionX + dx;
             }
           }
           return layer;
