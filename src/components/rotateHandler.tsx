@@ -4,11 +4,15 @@ import { useDrag } from "../utils/drag";
 
 interface RectProps {
   src: Layer;
+  onDragStart: (layerId: number) => void;
+  onDragEnd: () => void;
   onRotated: (layerId: number, nextTheta: Radian) => void;
 }
 
 export const RotateHandler: React.FC<RectProps> = ({
   src,
+  onDragStart,
+  onDragEnd,
   onRotated,
 }) => {
   const { id, positionX, positionY, width, height } = src;
@@ -17,6 +21,8 @@ export const RotateHandler: React.FC<RectProps> = ({
   const cy = positionY + height / 2;
 
   const ref = useDrag(
+    () => onDragStart(src.id),
+    onDragEnd,
     (dx, dy, x, y) => {
       const vx = x - cx;
       const vy = y - cy;

@@ -4,13 +4,13 @@ import { Pixel } from "../model/layer";
 
 class Draggable {
 
-  private lastTouch: { x: Pixel, y: Pixel } | null = null;
+  private initialTouch: { x: Pixel, y: Pixel } | null = null;
 
   constructor(
     private element: SVGRectElement,
+    private onDragStart: () => void,
+    private onDragEnd: () => void,
     private onMove: (dx: Pixel, dy: Pixel, x: Pixel, y: Pixel) => void,
-    private onDragStart?: () => void,
-    private onDragEnd?: () => void,
   ) {
     element.addEventListener("pointerdown", this._onDragStart, { passive: true });
   }
@@ -24,29 +24,28 @@ class Draggable {
 
     const x = Math.round(e.clientX);
     const y = Math.round(e.clientY);
-    this.lastTouch = { x, y };
-    this.onDragStart?.();
+    this.initialTouch = { x, y };
+    this.onDragStart();
     document.addEventListener("pointermove", this._onMove, { passive: true });
     document.addEventListener("pointerup", this._onDragEnd, { passive: true });
   }
 
   private _onMove = (e: PointerEvent) => {
     e.stopPropagation();
-    if (!this.lastTouch) {
+    if (!this.initialTouch) {
       return;
     }
 
     const x = Math.round(e.clientX);
     const y = Math.round(e.clientY);
-    this.onMove(x - this.lastTouch.x, y - this.lastTouch.y, x, y);
-    this.lastTouch = { x, y };
+    this.onMove(x - this.initialTouch.x, y - this.initialTouch.y, x, y);
   }
 
   private _onDragEnd = (e: PointerEvent) => {
     e.stopPropagation();
 
-    this.lastTouch = null;
-    this.onDragEnd?.();
+    this.initialTouch = null;
+    this.onDragEnd();
     document.removeEventListener("pointermove", this._onMove);
     document.removeEventListener("pointerup", this._onDragEnd);
   }
@@ -54,18 +53,18 @@ class Draggable {
 
 
 export const useDrag = (
+  onDragStart: () => void,
+  onDragEnd: () => void,
   onMove: (dx: number, dy: number, x: Pixel, y: Pixel) => void,
-  onDragStart?: () => void,
-  onDragEnd?: () => void,
 ) => {
   const ref = React.useRef<SVGRectElement | null>(null);
 
   React.useEffect(() => {
     const draggable = new Draggable(
       ref.current!,
-      onMove,
       onDragStart,
       onDragEnd,
+      onMove,
     );
     return () => {
       draggable.destroy();

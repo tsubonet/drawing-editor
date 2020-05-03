@@ -7,9 +7,9 @@ import { useDrag } from "../utils/drag";
 interface RectProps {
   src: Layer;
   onDragStart: (layerId: number) => void;
-  onMove: (dx: Pixel, dy: Pixel, layerId: number) => void;
   onDragEnd: () => void;
-  onResized: (dx: Pixel, dy: Pixel, layerId: number, posX: PosX, posY: PosY) => void;
+  onMoved: (dx: Pixel, dy: Pixel) => void;
+  onResized: (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) => void;
   onRotated: (layerId: number, nextTheta: Radian) => void;
 }
 
@@ -17,14 +17,14 @@ export const Rect: React.FC<RectProps> = ({
   src,
   onDragStart,
   onDragEnd,
-  onMove,
+  onMoved,
   onResized,
   onRotated,
 }) => {
   const ref = useDrag(
-    (dx, dy) => onMove(dx, dy, src.id),
     () => onDragStart(src.id),
-    onDragEnd
+    onDragEnd,
+    (dx, dy) => onMoved(dx, dy),
   );
 
   const ResizeHandlers =
@@ -39,6 +39,8 @@ export const Rect: React.FC<RectProps> = ({
             posX={x}
             posY={y}
             src={src}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
             onResized={onResized}
           />
         );
@@ -63,6 +65,8 @@ export const Rect: React.FC<RectProps> = ({
           {ResizeHandlers}
           <RotateHandler
             src={src}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
             onRotated={onRotated}
           />
         </g>

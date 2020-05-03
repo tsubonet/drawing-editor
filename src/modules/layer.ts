@@ -1,17 +1,17 @@
 import { Layer, Pixel, PosX, PosY, Radian } from "../model/layer";
 import { radianToDeg } from "../utils/layer";
 
-export const moveStarted = (id: Layer["id"]) =>
-  action("layer/moveStarted", { id });
+export const dragStarted = (id: Layer["id"]) =>
+  action("layer/dragStarted", { id });
 
-export const moved = (dx: Pixel, dy: Pixel, id: Layer["id"]) =>
-  action("layer/moved", { dx, dy, id });
+export const dragEnded = () =>
+  action("layer/dragEnded", {});
 
-export const moveEnded = () =>
-  action("layer/moveEnded", {});
+export const moved = (dx: Pixel, dy: Pixel) =>
+  action("layer/moved", { dx, dy });
 
-export const resized = (dx: Pixel, dy: Pixel, id: Layer["id"], posX: PosX, posY: PosY) =>
-  action("layer/resized", { id, dx, dy, posX, posY });
+export const resized = (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) =>
+  action("layer/resized", { dx, dy, posX, posY });
 
 export const rotated = (id: Layer["id"], nextTheta: Radian) =>
   action("layer/rotated", { id, nextTheta });
@@ -19,92 +19,126 @@ export const rotated = (id: Layer["id"], nextTheta: Radian) =>
 const action = <T extends string, P>(type: T, payload: P) => ({ type, payload })
 
 type Actions = (
-  | ReturnType<typeof moveStarted>
+  | ReturnType<typeof dragStarted>
+  | ReturnType<typeof dragEnded>
   | ReturnType<typeof moved>
-  | ReturnType<typeof moveEnded>
   | ReturnType<typeof resized>
   | ReturnType<typeof rotated>
 );
 
-export const initialState = [{
-  id: 1,
-  width: 200,
-  height: 100,
-  positionX: 100,
-  positionY: 100,
-  rotate: 0,
-  isSelected: false,
-}, {
-  id: 2,
-  width: 200,
-  height: 100,
-  positionX: 400,
-  positionY: 400,
-  rotate: 0,
-  isSelected: false,
-}];
+type Transform = Pick<
+  Layer,
+  "width" | "height" | "positionX" | "positionY" | "rotate"
+>;
+
+interface State {
+  layers: Layer[];
+  initialTransforms: Record<Layer["id"], Transform>;
+}
+
+export const initialState = {
+  layers: [{
+    id: 1,
+    width: 100,
+    height: 100,
+    positionX: 100,
+    positionY: 100,
+    rotate: 0,
+    isSelected: false,
+  }, {
+    id: 2,
+    width: 200,
+    height: 200,
+    positionX: 400,
+    positionY: 400,
+    rotate: 0,
+    isSelected: false,
+  }],
+  initialTransforms: {}
+};
 
 export const reducer = (
-  state = initialState,
+  state: State = initialState,
   action: Actions
-  ) => {
+  ): State => {
     switch (action.type) {
-      case "layer/moveStarted": {
+      case "layer/dragStarted": {
         const { id } = action.payload;
-        const layers = state.map(layer => {
+        const selectedLayer = state.layers.find(layer => layer.id === id);
+        if (!selectedLayer) {
+          return state;
+        }
+
+        const { width, height, positionX, positionY, rotate } = selectedLayer;
+          const initialTransforms = {
+            [id]: {
+              width,
+              height,
+              positionX,
+              positionY,
+              rotate
+            }
+          }
+        
+        const layers = state.layers.map(layer => {
           layer.isSelected = layer.id === id;
           return layer;
         });
-        return layers;
+        return { ...state, layers, initialTransforms }
+      }
+      case "layer/dragEnded": {
+        const initialTransforms = {};
+        return { ...state, initialTransforms }
       }
       case "layer/moved": {
-        const {id, dx, dy } = action.payload;
-        const layers = state.map(layer => {
-          if (layer.id === id) {
-            layer.positionX += dx;
-            layer.positionY += dy;
+        const { dx, dy } = action.payload;
+        const layers = state.layers.map(layer => {
+          const transform = state.initialTransforms[layer.id];
+          if (transform) {
+            const { positionX, positionY } = transform;
+            layer.positionX = positionX + dx;
+            layer.positionY = positionY + dy;
           }
           return layer;
         });
-        return layers;
+        return { ...state, layers }
       }
-      case "layer/moveEnded":
-        return state;
-
       case "layer/resized": {
-        const {id, posX, posY, dx, dy } = action.payload;
-        const layers = state.map(layer => {
-          if (layer.id === id) {
+        const { posX, posY, dx, dy } = action.payload;
+        const layers = state.layers.map(layer => {
+          const transform = state.initialTransforms[layer.id];
+          if (transform) {
+            const { width, height, positionX, positionY } = transform;
 
             if (posY === "bottom") {
-              layer.height += dy;
+              layer.height = height + dy;
             } else if (posY === "top") {
-              layer.positionY += dy;
-              layer.height -= dy;
+              layer.positionY = positionY + dy;
+              layer.height = positionY - dy;
             }
 
             if (posX === "right") {
-              layer.width += dx;
+              layer.width = width + dx;
             } else if (posX === "left") {
-              layer.positionX += dx;
-              layer.width -= dx;
+              layer.positionX = positionX + dx;
+              layer.width = width - dx;
             }
           }
           return layer;
         });
-        return layers;
+        return { ...state, layers }
       }
       case "layer/rotated": {
         const {id, nextTheta } = action.payload;
         const nextDegree = radianToDeg(nextTheta);
 
-        const layers = state.map(layer => {
+        const layers = state.layers.map(layer => {
           if (layer.id === id) {
             layer.rotate = nextDegree + 90;
           }
           return layer;
         });
-        return layers;
+        return { ...state, layers }
       }
       default:
         return state;

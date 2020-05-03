@@ -2,30 +2,30 @@ import * as React from "react";
 import { useWindowSize } from "../utils/windowSize";
 import { PosX, PosY } from "../model/layer";
 import { Rect } from "./rect";
-import { reducer, initialState, moveStarted, moved, moveEnded, resized, rotated } from "../modules/layer";
+import { reducer, initialState, dragStarted, dragEnded, moved, resized, rotated } from "../modules/layer";
 
 const Editor: React.FC<{}> = () => {
   const windowSize = useWindowSize();
-  const [layers, dispatch] = React.useReducer(reducer, initialState);
+  const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const onDragStart = (layerId: number) => {
     console.log("onDragStart:", layerId);
-    dispatch(moveStarted(layerId));
-  };
-
-  const onMove = (dx: number, dy: number, layerId: number) => {
-    console.log("onDragMove", dx, dy, layerId);
-    dispatch(moved(dx, dy, layerId));
+    dispatch(dragStarted(layerId));
   };
 
   const onDragEnd = () => {
     console.log("onDragEnd");
-    dispatch(moveEnded());
+    dispatch(dragEnded());
   };
 
-  const onResized = (dx: number, dy: number, layerId: number, posX: PosX, posY: PosY) => {
-    console.log("onResize", dx, dy, layerId, posX, posY);
-    dispatch(resized(dx, dy, layerId, posX, posY));
+  const onMoved = (dx: number, dy: number) => {
+    console.log("onDragMove", dx, dy);
+    dispatch(moved(dx, dy));
+  };
+
+  const onResized = (dx: number, dy: number, posX: PosX, posY: PosY) => {
+    console.log("onResize", dx, dy, posX, posY);
+    dispatch(resized(dx, dy, posX, posY));
   };
 
   const onRotated = (layerId: number, nextTheta: number) => {
@@ -40,13 +40,13 @@ const Editor: React.FC<{}> = () => {
         height={windowSize.height}
         viewBox={`0 0 ${windowSize.width} ${windowSize.height}`}
       >
-        {layers.map(layer => (
+        {state.layers.map(layer => (
           <Rect
             key={layer.id}
             src={layer}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
-            onMove={onMove}
+            onMoved={onMoved}
             onResized={onResized}
             onRotated={onRotated}
           />
