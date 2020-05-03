@@ -23,7 +23,7 @@ export const Rect: React.FC<RectProps> = ({
 }) => {
   const ref = useDrag(
     () => onDragStart(src.id),
-    onDragEnd,
+    () => onDragEnd(),
     (dx, dy) => onMoved(dx, dy),
   );
 

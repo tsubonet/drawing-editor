@@ -26,7 +26,7 @@ export const ResizeHandler: React.FC<RectProps> = ({
 
   const ref = useDrag(
     () => onDragStart(id),
-    onDragEnd,
+    () => onDragEnd(),
     (dx, dy) => {
       const cx = positionX + width / 2;
       const cy = positionY + height / 2;

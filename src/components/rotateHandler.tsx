@@ -22,7 +22,7 @@ export const RotateHandler: React.FC<RectProps> = ({
 
   const ref = useDrag(
     () => onDragStart(id),
-    onDragEnd,
+    () => onDragEnd(),
     (dx, dy, x, y) => {
       const vx = x - cx;
       const vy = y - cy;
