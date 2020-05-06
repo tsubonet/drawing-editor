@@ -18,9 +18,9 @@ const Editor: React.FC<{}> = () => {
   const windowSize = useWindowSize();
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
-  const onDragStart = (layerId: number) => {
-    console.log("onDragStart:", layerId);
-    dispatch(dragStarted(layerId));
+  const onDragStart = (e: PointerEvent, layerId: number) => {
+    console.log("onDragStart:", e, layerId);
+    dispatch(dragStarted(e, layerId));
   };
 
   const onDragEnd = () => {
@@ -33,9 +33,9 @@ const Editor: React.FC<{}> = () => {
     dispatch(moved(dx, dy));
   };
 
-  const onResized = (dx: number, dy: number, posX: PosX, posY: PosY, keepAspectRatio: boolean) => {
-    console.log("onResize", dx, dy, posX, posY, keepAspectRatio);
-    dispatch(resized(dx, dy, posX, posY, keepAspectRatio));
+  const onResized = (e: PointerEvent, dx: number, dy: number, posX: PosX, posY: PosY) => {
+    console.log("onResize", e, dx, dy, posX, posY);
+    dispatch(resized(e, dx, dy, posX, posY));
   };
 
   const onRotated = (nextTheta: number) => {

@@ -8,9 +8,9 @@ class Draggable {
 
   constructor(
     private element: SVGRectElement,
-    private onDragStart: () => void,
+    private onDragStart: (e: PointerEvent) => void,
     private onDragEnd: () => void,
-    private onMove: (dx: Pixel, dy: Pixel, x: Pixel, y: Pixel, isPressShiftKey: boolean) => void,
+    private onMove: (e: PointerEvent, dx: Pixel, dy: Pixel, x: Pixel, y: Pixel) => void,
   ) {
     element.addEventListener("pointerdown", this._onDragStart, { passive: true });
   }
@@ -25,7 +25,7 @@ class Draggable {
     const x = Math.round(e.clientX);
     const y = Math.round(e.clientY);
     this.initialTouch = { x, y };
-    this.onDragStart();
+    this.onDragStart(e);
     document.addEventListener("pointermove", this._onMove, { passive: true });
     document.addEventListener("pointerup", this._onDragEnd, { passive: true });
   }
@@ -38,7 +38,7 @@ class Draggable {
 
     const x = Math.round(e.clientX);
     const y = Math.round(e.clientY);
-    this.onMove(x - this.initialTouch.x, y - this.initialTouch.y, x, y, e.shiftKey);
+    this.onMove(e, x - this.initialTouch.x, y - this.initialTouch.y, x, y);
   }
 
   private _onDragEnd = (e: PointerEvent) => {
@@ -53,9 +53,9 @@ class Draggable {
 
 
 export const useDrag = (
-  onDragStart: () => void,
+  onDragStart: (e: PointerEvent) => void,
   onDragEnd: () => void,
-  onMove: (dx: number, dy: number, x: Pixel, y: Pixel, isPressShiftKey: boolean) => void,
+  onMove: (e: PointerEvent, dx: number, dy: number, x: Pixel, y: Pixel) => void,
 ) => {
   const ref = React.useRef<SVGRectElement | null>(null);
 

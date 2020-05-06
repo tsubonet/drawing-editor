@@ -1,8 +1,8 @@
 import { Layer, Pixel, PosX, PosY, Radian } from "../model/layer";
 import { radianToDeg } from "../utils/layer";
 
-export const dragStarted = (id: Layer["id"]) =>
-  action("layer/dragStarted", { id });
+export const dragStarted = (e: PointerEvent, id: Layer["id"]) =>
+  action("layer/dragStarted", { e, id });
 
 export const dragEnded = () =>
   action("layer/dragEnded", {});
@@ -10,8 +10,8 @@ export const dragEnded = () =>
 export const moved = (dx: Pixel, dy: Pixel) =>
   action("layer/moved", { dx, dy });
 
-export const resized = (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY, keepAspectRatio: boolean) =>
-  action("layer/resized", { dx, dy, posX, posY, keepAspectRatio });
+export const resized = (e: PointerEvent, dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) =>
+  action("layer/resized", { e, dx, dy, posX, posY });
 
 export const rotated = (nextTheta: Radian) =>
   action("layer/rotated", { nextTheta });
@@ -71,7 +71,7 @@ export const reducer = (
   ): State => {
     switch (action.type) {
       case "layer/dragStarted": {
-        const { id } = action.payload;
+        const { e, id } = action.payload;
         const selectedLayer = state.layers.find(layer => layer.id === id);
         if (!selectedLayer) {
           return state;
@@ -87,10 +87,24 @@ export const reducer = (
           }
         };
         
-        const layers = state.layers.map(layer => ({
-          ...layer, 
-          isSelected: layer.id === id
-        }));
+        let layers: Layer[];
+        if (e.shiftKey) {
+          layers = state.layers.map(layer => {
+            if (layer.id === id) {
+              return {
+                ...layer,
+                isSelected: true
+              }
+            }
+            return layer;
+          });
+        } else {
+          layers = state.layers.map(layer => ({
+            ...layer,
+            isSelected: layer.id === id
+          }));
+        }
+      
         return { ...state, layers, initialTransforms }
       }
 
@@ -114,7 +128,8 @@ export const reducer = (
       }
 
       case "layer/resized": {
-        const { posX, posY, dx, dy, keepAspectRatio } = action.payload;
+        const { e, posX, posY, dx, dy } = action.payload;
+        const keepAspectRatio = e.shiftKey;
         const layers = state.layers.map(layer => {
           const transform = state.initialTransforms[layer.id];
           if (transform) {
@@ -169,12 +184,14 @@ export const reducer = (
 
       case "layer/created": {
         const maxId = Math.max(...state.layers.map(layer => layer.id));
+        const maxPositionX = Math.max(...state.layers.map(layer => layer.positionX));
+        const maxPositionY = Math.max(...state.layers.map(layer => layer.positionY));
         const createdLayer = {
           id: maxId > 0 ? maxId + 1: 1,
           width: 100,
           height: 100,
-          positionX: 50,
-          positionY: 50,
+          positionX: maxPositionX > 0 ? maxPositionX + 30: 30,
+          positionY: maxPositionY > 0 ? maxPositionY + 30: 30,
           rotate: 0,
           isSelected: false,
         };

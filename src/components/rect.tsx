@@ -6,10 +6,10 @@ import { useDrag } from "../utils/drag";
 
 interface RectProps {
   src: Layer;
-  onDragStart: (layerId: number) => void;
+  onDragStart: (e: PointerEvent, layerId: number) => void;
   onDragEnd: () => void;
   onMoved: (dx: Pixel, dy: Pixel) => void;
-  onResized: (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY, keepAspectRatio: boolean) => void;
+  onResized: (e: PointerEvent, dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) => void;
   onRotated: (nextTheta: Radian) => void;
 }
 
@@ -22,9 +22,9 @@ export const Rect: React.FC<RectProps> = ({
   onRotated,
 }) => {
   const ref = useDrag(
-    () => onDragStart(src.id),
+    (e) => onDragStart(e, src.id),
     () => onDragEnd(),
-    (dx, dy) => onMoved(dx, dy),
+    (e, dx, dy) => onMoved(dx, dy),
   );
 
   const ResizeHandlers =

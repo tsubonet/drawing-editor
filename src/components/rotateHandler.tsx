@@ -4,7 +4,7 @@ import { useDrag } from "../utils/drag";
 
 interface RectProps {
   src: Layer;
-  onDragStart: (layerId: number) => void;
+  onDragStart: (e: PointerEvent, layerId: number) => void;
   onDragEnd: () => void;
   onRotated: (nextTheta: Radian) => void;
 }
@@ -21,9 +21,9 @@ export const RotateHandler: React.FC<RectProps> = ({
   const cy = positionY + height / 2;
 
   const ref = useDrag(
-    () => onDragStart(id),
+    (e) => onDragStart(e, id),
     () => onDragEnd(),
-    (dx, dy, x, y) => {
+    (e, dx, dy, x, y) => {
       const vx = x - cx;
       const vy = y - cy;
       const nextTheta = Math.atan2(vy, vx);
