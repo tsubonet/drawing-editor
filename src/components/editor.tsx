@@ -49,6 +49,10 @@ const Editor: React.FC<{}> = () => {
         dispatch(deleted());
       }
     });
+
+    document.addEventListener("pointerdown", (e) => {
+      dispatch(dragStarted(e));
+    });
   }, []);
 
   return (

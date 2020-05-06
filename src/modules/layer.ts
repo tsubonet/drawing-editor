@@ -1,7 +1,7 @@
 import { Layer, Pixel, PosX, PosY, Radian } from "../model/layer";
 import { radianToDeg } from "../utils/layer";
 
-export const dragStarted = (e: PointerEvent, id: Layer["id"]) =>
+export const dragStarted = (e: PointerEvent, id?: Layer["id"]) =>
   action("layer/dragStarted", { e, id });
 
 export const dragEnded = () =>
@@ -90,23 +90,18 @@ export const reducer = (
             isSelected: layer.id === id
           }));
         }
-
-        const selectedLayers = layers
-          .filter(layer => layer.id === id || layer.isSelected);
-        if (!selectedLayers.length) {
-          return state;
-        }
-       
         let initialTransforms: Record<Layer["id"], Transform> = {};
-        selectedLayers.forEach((layer) => {
-          initialTransforms[layer.id] = {
-            width: layer.width,
-            height: layer.height,
-            positionX: layer.positionX,
-            positionY: layer.positionY,
-            rotate: layer.rotate
-          }
-        });
+        layers
+          .filter(layer => layer.isSelected)
+          .forEach((layer) => {
+            initialTransforms[layer.id] = {
+              width: layer.width,
+              height: layer.height,
+              positionX: layer.positionX,
+              positionY: layer.positionY,
+              rotate: layer.rotate
+            }
+          });
       
         return { ...state, layers, initialTransforms }
       }
