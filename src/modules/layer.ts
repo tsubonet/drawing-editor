@@ -16,6 +16,9 @@ export const resized = (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY, keepAspect
 export const rotated = (nextTheta: Radian) =>
   action("layer/rotated", { nextTheta });
 
+export const created = () =>
+  action("layer/created", {});
+
 export const deleted = () =>
   action("layer/deleted", {});
 
@@ -27,6 +30,7 @@ type Actions = (
   | ReturnType<typeof moved>
   | ReturnType<typeof resized>
   | ReturnType<typeof rotated>
+  | ReturnType<typeof created>
   | ReturnType<typeof deleted>
 );
 
@@ -55,14 +59,6 @@ export const initialState = {
     height: 200,
     positionX: 300,
     positionY: 300,
-    rotate: 0,
-    isSelected: false,
-  }, {
-    id: 3,
-    width: 200,
-    height: 200,
-    positionX: 600,
-    positionY: 600,
     rotate: 0,
     isSelected: false,
   }],
@@ -168,6 +164,22 @@ export const reducer = (
           }
           return layer;
         });
+        return { ...state, layers }
+      }
+
+      case "layer/created": {
+        const maxId = Math.max(...state.layers.map(layer => layer.id));
+        const createdLayer = {
+          id: maxId > 0 ? maxId + 1: 1,
+          width: 100,
+          height: 100,
+          positionX: 50,
+          positionY: 50,
+          rotate: 0,
+          isSelected: false,
+        };
+        const layers = [ ...state.layers, createdLayer];
+        console.log(layers);
         return { ...state, layers }
       }
 

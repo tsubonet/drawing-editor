@@ -10,6 +10,7 @@ import {
   moved,
   resized,
   rotated,
+  created,
   deleted,
 } from "../modules/layer";
 
@@ -52,6 +53,12 @@ const Editor: React.FC<{}> = () => {
 
   return (
     <div>
+      <button
+        onClick={() => dispatch(created())}
+        style={{ position: "absolute", top: "10px", left: "10px" }}
+      >
+        +
+      </button>
       <svg 
         width={windowSize.width}
         height={windowSize.height}
