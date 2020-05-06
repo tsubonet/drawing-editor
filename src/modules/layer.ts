@@ -16,6 +16,9 @@ export const resized = (dx: Pixel, dy: Pixel, posX: PosX, posY: PosY, keepAspect
 export const rotated = (nextTheta: Radian) =>
   action("layer/rotated", { nextTheta });
 
+export const deleted = () =>
+  action("layer/deleted", {});
+
 const action = <T extends string, P>(type: T, payload: P) => ({ type, payload })
 
 type Actions = (
@@ -24,6 +27,7 @@ type Actions = (
   | ReturnType<typeof moved>
   | ReturnType<typeof resized>
   | ReturnType<typeof rotated>
+  | ReturnType<typeof deleted>
 );
 
 type Transform = Pick<
@@ -49,8 +53,16 @@ export const initialState = {
     id: 2,
     width: 200,
     height: 200,
-    positionX: 400,
-    positionY: 400,
+    positionX: 300,
+    positionY: 300,
+    rotate: 0,
+    isSelected: false,
+  }, {
+    id: 3,
+    width: 200,
+    height: 200,
+    positionX: 600,
+    positionY: 600,
     rotate: 0,
     isSelected: false,
   }],
@@ -156,6 +168,11 @@ export const reducer = (
           }
           return layer;
         });
+        return { ...state, layers }
+      }
+
+      case "layer/deleted": {
+        const layers = state.layers.filter(layer => !layer.isSelected);
         return { ...state, layers }
       }
 

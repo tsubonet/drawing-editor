@@ -2,7 +2,16 @@ import * as React from "react";
 import { useWindowSize } from "../utils/windowSize";
 import { PosX, PosY } from "../model/layer";
 import { Rect } from "./rect";
-import { reducer, initialState, dragStarted, dragEnded, moved, resized, rotated } from "../modules/layer";
+import { 
+  reducer,
+  initialState,
+  dragStarted,
+  dragEnded,
+  moved,
+  resized,
+  rotated,
+  deleted,
+} from "../modules/layer";
 
 const Editor: React.FC<{}> = () => {
   const windowSize = useWindowSize();
@@ -32,6 +41,14 @@ const Editor: React.FC<{}> = () => {
     console.log("onRotate", nextTheta);
     dispatch(rotated(nextTheta));
   };
+
+  React.useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.keyCode == 8) {
+        dispatch(deleted());
+      }
+    });
+  }, []);
 
   return (
     <div>
