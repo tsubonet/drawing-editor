@@ -72,20 +72,6 @@ export const reducer = (
     switch (action.type) {
       case "layer/dragStarted": {
         const { e, id } = action.payload;
-        const selectedLayer = state.layers.find(layer => layer.id === id);
-        if (!selectedLayer) {
-          return state;
-        }
-
-        const initialTransforms = {
-          [id]: {
-            width: selectedLayer.width,
-            height: selectedLayer.height,
-            positionX: selectedLayer.positionX,
-            positionY: selectedLayer.positionY,
-            rotate: selectedLayer.rotate
-          }
-        };
         
         let layers: Layer[];
         if (e.shiftKey) {
@@ -104,6 +90,23 @@ export const reducer = (
             isSelected: layer.id === id
           }));
         }
+
+        const selectedLayers = layers
+          .filter(layer => layer.id === id || layer.isSelected);
+        if (!selectedLayers.length) {
+          return state;
+        }
+       
+        let initialTransforms: Record<Layer["id"], Transform> = {};
+        selectedLayers.forEach((layer) => {
+          initialTransforms[layer.id] = {
+            width: layer.width,
+            height: layer.height,
+            positionX: layer.positionX,
+            positionY: layer.positionY,
+            rotate: layer.rotate
+          }
+        });
       
         return { ...state, layers, initialTransforms }
       }
