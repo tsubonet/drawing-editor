@@ -22,8 +22,8 @@ class Draggable {
   private _onDragStart = (e: PointerEvent) => {
     e.stopPropagation();
 
-    const x = Math.round(e.clientX);
-    const y = Math.round(e.clientY);
+    const x = this.round(e.clientX);
+    const y = this.round(e.clientY);
     this.initialTouch = { x, y };
     this.onDragStart(e);
     document.addEventListener("pointermove", this._onMove, { passive: true });
@@ -36,8 +36,8 @@ class Draggable {
       return;
     }
 
-    const x = Math.round(e.clientX);
-    const y = Math.round(e.clientY);
+    const x = this.round(e.clientX);
+    const y = this.round(e.clientY);
     this.onMove(e, x - this.initialTouch.x, y - this.initialTouch.y, x, y);
   }
 
@@ -48,6 +48,10 @@ class Draggable {
     this.onDragEnd();
     document.removeEventListener("pointermove", this._onMove);
     document.removeEventListener("pointerup", this._onDragEnd);
+  }
+
+  private round = (v: number) => {
+    return Math.round(v / 10) * 10;
   }
 }
 
