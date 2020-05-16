@@ -117,8 +117,19 @@ export const reducer = (
           const transform = state.initialTransforms[layer.id];
           if (transform) {
             const { positionX, positionY } = transform;
-            layer.positionX = positionX + dx;
-            layer.positionY = positionY + dy;
+            const _positionX = positionX + dx;
+            const _positionY = positionY + dy;
+            layer.positionX = _positionX;
+            layer.positionY = _positionY;
+
+            const guideTest = state.layers.filter(_layer =>_layer.id !== layer.id).some(_layer => {
+              return _positionX === _layer.positionX
+                  || _positionX === _layer.positionX + _layer.width
+                  || _positionX === _layer.positionX + _layer.width / 2;
+            });
+            console.log(guideTest);
+
+
           }
           return layer;
         });
