@@ -12,6 +12,7 @@ import {
   rotated,
   created,
   deleted,
+  SnapGuides,
 } from "../modules/layer";
 
 const Editor: React.FC<{}> = () => {
@@ -77,6 +78,14 @@ const Editor: React.FC<{}> = () => {
             onMoved={onMoved}
             onResized={onResized}
             onRotated={onRotated}
+          />
+        ))}
+        {Object.keys(state.snapGuides).map((key, i) => (
+          <line 
+            key={i}
+            {...state.snapGuides[key as keyof SnapGuides]}
+            stroke="red"
+            strokeDasharray="4 4"
           />
         ))}
       </svg>

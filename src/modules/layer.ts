@@ -39,9 +39,22 @@ type Transform = Pick<
   "width" | "height" | "positionX" | "positionY" | "rotate"
 >;
 
+interface LinePath {
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+}
+
+export interface SnapGuides {
+  hLine?: LinePath;
+  vLine?: LinePath;
+}
+
 interface State {
   layers: Layer[];
   initialTransforms: Record<Layer["id"], Transform>;
+  snapGuides: SnapGuides;
 }
 
 export const initialState = {
@@ -62,7 +75,8 @@ export const initialState = {
     rotate: 0,
     isSelected: false,
   }],
-  initialTransforms: {}
+  initialTransforms: {},
+  snapGuides: {},
 };
 
 export const reducer = (
@@ -113,27 +127,82 @@ export const reducer = (
 
       case "layer/moved": {
         const { dx, dy } = action.payload;
+        const snapGuides: SnapGuides = {};
         const layers = state.layers.map(layer => {
           const transform = state.initialTransforms[layer.id];
           if (transform) {
             const { positionX, positionY } = transform;
-            const _positionX = positionX + dx;
-            const _positionY = positionY + dy;
-            layer.positionX = _positionX;
-            layer.positionY = _positionY;
+            layer.positionX = positionX + dx;
+            layer.positionY = positionY + dy;
 
-            const guideTest = state.layers.filter(_layer =>_layer.id !== layer.id).some(_layer => {
-              return _positionX === _layer.positionX
-                  || _positionX === _layer.positionX + _layer.width
-                  || _positionX === _layer.positionX + _layer.width / 2;
+            state.layers.forEach(_layer => {
+              if (_layer.id === layer.id) {
+                return;
+              }
+              const hitPosX = [
+                _layer.positionX,
+                _layer.positionX + _layer.width,
+                _layer.positionX + _layer.width / 2
+              ];
+              const linePosY = [
+                _layer.positionY,
+                _layer.positionY + _layer.height,
+                layer.positionY,
+                layer.positionY + layer.height,
+              ];
+
+              const hitPosY = [
+                _layer.positionY,
+                _layer.positionY + _layer.height,
+                _layer.positionY + _layer.height / 2
+              ];
+              const linePosX = [
+                _layer.positionX,
+                _layer.positionX + _layer.width,
+                layer.positionX,
+                layer.positionX + layer.width,
+              ];
+
+              if (hitPosX.includes(layer.positionX)) {
+                snapGuides.vLine = {
+                  x1: layer.positionX,
+                  x2: layer.positionX,
+                  y1: Math.min(...linePosY) - 40,
+                  y2: Math.max(...linePosY) + 40,
+                };
+              }
+
+              if (hitPosX.includes(layer.positionX + layer.width)) {
+                snapGuides.vLine = {
+                  x1: layer.positionX + layer.width,
+                  x2: layer.positionX + layer.width,
+                  y1: Math.min(...linePosY) - 40,
+                  y2: Math.max(...linePosY) + 40,
+                };
+              }
+
+              if (hitPosY.includes(layer.positionY)) {
+                snapGuides.hLine = {
+                  x1: Math.min(...linePosX) - 40,
+                  x2: Math.max(...linePosX) + 40,
+                  y1: layer.positionY,
+                  y2: layer.positionY,
+                };
+              }
+
+              if (hitPosY.includes(layer.positionY + layer.height)) {
+                snapGuides.hLine = {
+                  x1: Math.min(...linePosX) - 40,
+                  x2: Math.max(...linePosX) + 40,
+                  y1: layer.positionY + layer.height,
+                  y2: layer.positionY + layer.height,
+                };
+              }
             });
-            console.log(guideTest);
-
-
           }
           return layer;
         });
-        return { ...state, layers }
+        return { ...state, layers, snapGuides }
       }
 
       case "layer/resized": {
