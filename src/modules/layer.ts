@@ -181,6 +181,15 @@ export const reducer = (
                 };
               }
 
+              if (hitPosX.includes(layer.positionX + layer.width / 2)) {
+                snapGuides.vLine = {
+                  x1: layer.positionX + layer.width / 2,
+                  x2: layer.positionX + layer.width / 2,
+                  y1: Math.min(...linePosY) - 40,
+                  y2: Math.max(...linePosY) + 40,
+                };
+              }
+
               if (hitPosY.includes(layer.positionY)) {
                 snapGuides.hLine = {
                   x1: Math.min(...linePosX) - 40,
@@ -196,6 +205,15 @@ export const reducer = (
                   x2: Math.max(...linePosX) + 40,
                   y1: layer.positionY + layer.height,
                   y2: layer.positionY + layer.height,
+                };
+              }
+
+              if (hitPosY.includes(layer.positionY + layer.height / 2)) {
+                snapGuides.hLine = {
+                  x1: Math.min(...linePosX) - 40,
+                  x2: Math.max(...linePosX) + 40,
+                  y1: layer.positionY + layer.height / 2,
+                  y2: layer.positionY + layer.height / 2,
                 };
               }
             });
