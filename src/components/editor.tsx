@@ -90,7 +90,7 @@ const Editor: React.FC<{}> = () => {
         ))}
       </svg>
     </div>
-  )
+  );
 };
 
-export default Editor
+export default Editor;

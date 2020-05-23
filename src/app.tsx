@@ -1,7 +1,7 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Editor from './components/editor'
-import './style.scss'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Editor from './components/editor';
+import './style.scss';
 
 const App: React.FC<{}> = () => (
   <>
@@ -9,4 +9,4 @@ const App: React.FC<{}> = () => (
   </>
 );
 
-ReactDOM.render(<App/>, document.querySelector('#app'))
+ReactDOM.render(<App/>, document.querySelector('#app'));

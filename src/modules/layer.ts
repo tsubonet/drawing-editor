@@ -22,7 +22,7 @@ export const created = () =>
 export const deleted = () =>
   action("layer/deleted", {});
 
-const action = <T extends string, P>(type: T, payload: P) => ({ type, payload })
+const action = <T extends string, P>(type: T, payload: P) => ({ type, payload });
 
 type Actions = (
   | ReturnType<typeof dragStarted>
@@ -94,7 +94,7 @@ export const reducer = (
               return {
                 ...layer,
                 isSelected: true
-              }
+              };
             }
             return layer;
           });
@@ -114,15 +114,15 @@ export const reducer = (
               positionX: layer.positionX,
               positionY: layer.positionY,
               rotate: layer.rotate
-            }
+            };
           });
       
-        return { ...state, layers, initialTransforms }
+        return { ...state, layers, initialTransforms };
       }
 
       case "layer/dragEnded": {
         const initialTransforms = {};
-        return { ...state, initialTransforms }
+        return { ...state, initialTransforms };
       }
 
       case "layer/moved": {
@@ -202,7 +202,7 @@ export const reducer = (
           }
           return layer;
         });
-        return { ...state, layers, snapGuides }
+        return { ...state, layers, snapGuides };
       }
 
       case "layer/resized": {
@@ -243,7 +243,7 @@ export const reducer = (
           }
           return layer;
         });
-        return { ...state, layers }
+        return { ...state, layers };
       }
 
       case "layer/rotated": {
@@ -257,7 +257,7 @@ export const reducer = (
           }
           return layer;
         });
-        return { ...state, layers }
+        return { ...state, layers };
       }
 
       case "layer/created": {
@@ -275,12 +275,12 @@ export const reducer = (
         };
         const layers = [ ...state.layers, createdLayer];
         console.log(layers);
-        return { ...state, layers }
+        return { ...state, layers };
       }
 
       case "layer/deleted": {
         const layers = state.layers.filter(layer => !layer.isSelected);
-        return { ...state, layers }
+        return { ...state, layers };
       }
 
       default:
