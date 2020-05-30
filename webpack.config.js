@@ -12,7 +12,21 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader"
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true
+            }
+          },
+          {
+            loader: 'eslint-loader',
+            options: {
+              emitError: true,
+            },
+          }
+        ]
       },
       {
         test: /\.scss$/,
@@ -35,4 +49,4 @@ module.exports = {
     open: false,
     port: 8081,
   }
-}
+};
