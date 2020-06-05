@@ -104,7 +104,7 @@ export const reducer = (
             isSelected: layer.id === id
           }));
         }
-        let initialTransforms: Record<Layer["id"], Transform> = {};
+        const initialTransforms: Record<Layer["id"], Transform> = {};
         layers
           .filter(layer => layer.isSelected)
           .forEach((layer) => {

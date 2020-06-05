@@ -31,7 +31,7 @@ export const ResizeHandler: React.FC<RectProps> = ({
       const cx = positionX + width / 2;
       const cy = positionY + height / 2;
       const [_dx, _dy] = transformRotate(rotate, [cx, cy], [dx, dy]);
-      onResized(e, _dx, _dy, posX, posY)
+      onResized(e, _dx, _dy, posX, posY);
     },
   );
 
