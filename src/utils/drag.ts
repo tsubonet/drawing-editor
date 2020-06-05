@@ -1,18 +1,24 @@
 import * as React from "react";
 import { Pixel } from "../model/layer";
 
-
 class Draggable {
-
-  private initialTouch: { x: Pixel, y: Pixel } | null = null;
+  private initialTouch: { x: Pixel; y: Pixel } | null = null;
 
   constructor(
     private element: SVGRectElement,
     private onDragStart: (e: PointerEvent) => void,
     private onDragEnd: () => void,
-    private onMove: (e: PointerEvent, dx: Pixel, dy: Pixel, x: Pixel, y: Pixel) => void,
+    private onMove: (
+      e: PointerEvent,
+      dx: Pixel,
+      dy: Pixel,
+      x: Pixel,
+      y: Pixel,
+    ) => void,
   ) {
-    element.addEventListener("pointerdown", this._onDragStart, { passive: true });
+    element.addEventListener("pointerdown", this._onDragStart, {
+      passive: true,
+    });
   }
 
   destroy() {
@@ -54,7 +60,6 @@ class Draggable {
     return Math.round(v / 10) * 10;
   };
 }
-
 
 export const useDrag = (
   onDragStart: (e: PointerEvent) => void,

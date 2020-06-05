@@ -9,7 +9,13 @@ interface RectProps {
   src: Layer;
   onDragStart: (e: PointerEvent, layerId: number) => void;
   onDragEnd: () => void;
-  onResized: (e: PointerEvent, dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) => void;
+  onResized: (
+    e: PointerEvent,
+    dx: Pixel,
+    dy: Pixel,
+    posX: PosX,
+    posY: PosY,
+  ) => void;
 }
 const TOLERANCE = 4 as Pixel;
 const HANDLE_SIZE = 10 as Pixel;

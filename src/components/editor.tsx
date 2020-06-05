@@ -2,7 +2,7 @@ import * as React from "react";
 import { useWindowSize } from "../utils/windowSize";
 import { PosX, PosY } from "../model/layer";
 import { Rect } from "./rect";
-import { 
+import {
   reducer,
   initialState,
   dragStarted,
@@ -34,7 +34,13 @@ const Editor: React.FC<{}> = () => {
     dispatch(moved(dx, dy));
   };
 
-  const onResized = (e: PointerEvent, dx: number, dy: number, posX: PosX, posY: PosY) => {
+  const onResized = (
+    e: PointerEvent,
+    dx: number,
+    dy: number,
+    posX: PosX,
+    posY: PosY,
+  ) => {
     console.log("onResize", e, dx, dy, posX, posY);
     dispatch(resized(e, dx, dy, posX, posY));
   };
@@ -64,12 +70,12 @@ const Editor: React.FC<{}> = () => {
       >
         +
       </button>
-      <svg 
+      <svg
         width={windowSize.width}
         height={windowSize.height}
         viewBox={`0 0 ${windowSize.width} ${windowSize.height}`}
       >
-        {state.layers.map(layer => (
+        {state.layers.map((layer) => (
           <Rect
             key={layer.id}
             src={layer}
@@ -81,7 +87,7 @@ const Editor: React.FC<{}> = () => {
           />
         ))}
         {Object.keys(state.snapGuides).map((key, i) => (
-          <line 
+          <line
             key={i}
             {...state.snapGuides[key as keyof SnapGuides]}
             stroke="red"

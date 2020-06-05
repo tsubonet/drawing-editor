@@ -6,11 +6,11 @@ export type PosX = "left" | "center" | "right";
 export type PosY = "top" | "middle" | "bottom";
 
 export interface Layer {
-    id: number;
-    width: Pixel;
-    height: Pixel;
-    positionX: Pixel;
-    positionY: Pixel;
-    rotate: Degree;
-    isSelected: boolean;
+  id: number;
+  width: Pixel;
+  height: Pixel;
+  positionX: Pixel;
+  positionY: Pixel;
+  rotate: Degree;
+  isSelected: boolean;
 }

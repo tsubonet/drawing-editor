@@ -1,12 +1,12 @@
-const path = require('path');
-const outputPath = path.resolve(__dirname, 'dist');
+const path = require("path");
+const outputPath = path.resolve(__dirname, "dist");
 
 module.exports = {
   mode: "development",
   entry: "./src/app.tsx",
   output: {
     path: outputPath,
-    filename: "main.js"
+    filename: "main.js",
   },
   module: {
     rules: [
@@ -15,18 +15,18 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader',
+            loader: "ts-loader",
             options: {
-              transpileOnly: true
-            }
+              transpileOnly: true,
+            },
           },
           {
-            loader: 'eslint-loader',
+            loader: "eslint-loader",
             options: {
               emitError: true,
             },
-          }
-        ]
+          },
+        ],
       },
       {
         test: /\.scss$/,
@@ -34,19 +34,19 @@ module.exports = {
           "style-loader",
           {
             loader: "css-loader",
-            options: { url: false }
+            options: { url: false },
           },
-          "sass-loader"
-        ]
-      }
-    ]
+          "sass-loader",
+        ],
+      },
+    ],
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".json"]
+    extensions: [".ts", ".tsx", ".js", ".json"],
   },
   devServer: {
     contentBase: outputPath,
     open: false,
     port: 8081,
-  }
+  },
 };
