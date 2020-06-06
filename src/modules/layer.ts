@@ -129,7 +129,8 @@ export const reducer = (
 
     case "layer/dragEnded": {
       const initialTransforms = {};
-      return { ...state, initialTransforms };
+      const snapGuides = {};
+      return { ...state, initialTransforms, snapGuides };
     }
 
     case "layer/moved": {

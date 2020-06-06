@@ -90,7 +90,7 @@ const Editor: React.FC<{}> = () => {
           <line
             key={i}
             {...state.snapGuides[key as keyof SnapGuides]}
-            stroke="red"
+            stroke="rgb(36, 136,253)"
             strokeDasharray="4 4"
           />
         ))}
