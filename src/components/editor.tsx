@@ -20,17 +20,14 @@ const Editor: React.FC<{}> = () => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const onDragStart = (e: PointerEvent, layerId: number) => {
-    console.log("onDragStart:", e, layerId);
     dispatch(dragStarted(e, layerId));
   };
 
   const onDragEnd = () => {
-    console.log("onDragEnd");
     dispatch(dragEnded());
   };
 
   const onMoved = (dx: number, dy: number) => {
-    console.log("onDragMove", dx, dy);
     dispatch(moved(dx, dy));
   };
 
@@ -41,12 +38,10 @@ const Editor: React.FC<{}> = () => {
     posX: PosX,
     posY: PosY,
   ) => {
-    console.log("onResize", e, dx, dy, posX, posY);
     dispatch(resized(e, dx, dy, posX, posY));
   };
 
   const onRotated = (nextTheta: number) => {
-    console.log("onRotate", nextTheta);
     dispatch(rotated(nextTheta));
   };
 

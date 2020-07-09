@@ -1,5 +1,5 @@
 import { Layer, Pixel, PosX, PosY, Radian } from "../model/layer";
-import { radianToDeg } from "../utils/layer";
+import { radianToDeg, transformRotate } from "../utils/layer";
 
 export const dragStarted = (e: PointerEvent, id?: Layer["id"]) =>
   action("layer/dragStarted", { e, id });
@@ -251,26 +251,31 @@ export const reducer = (
       const layers = state.layers.map((layer) => {
         const transform = state.initialTransforms[layer.id];
         if (transform) {
-          const { width, height, positionX, positionY } = transform;
+          const { width, height, positionX, positionY, rotate } = transform;
+
+          const cx = positionX + width / 2;
+          const cy = positionY + height / 2;
+          const [_dx, _dy] = transformRotate(rotate, [cx, cy], [dx, dy]);
+          // console.log("aaaaa", rotate, _dx, _dy);
 
           if (posY === "bottom") {
             if (keepAspectRatio && posX === "right") {
-              layer.height = ((width + dx) / width) * height;
+              layer.height = ((width + _dx) / width) * height;
             } else if (keepAspectRatio && posX === "left") {
-              layer.height = ((width - dx) / width) * height;
+              layer.height = ((width - _dx) / width) * height;
             } else {
-              layer.height = height + dy;
+              layer.height = height - _dy;
             }
           } else if (posY === "top") {
             if (keepAspectRatio && posX === "right") {
-              layer.height = ((width + dx) / width) * height;
-              layer.positionY = positionY - (dx / width) * height;
+              layer.height = ((width + _dx) / width) * height;
+              layer.positionY = positionY - (_dx / width) * height;
             } else if (keepAspectRatio && posX === "left") {
-              layer.height = ((width - dx) / width) * height;
-              layer.positionY = positionY - (-dx / width) * height;
+              layer.height = ((width - _dx) / width) * height;
+              layer.positionY = positionY - (-_dx / width) * height;
             } else {
-              layer.height = height - dy;
-              layer.positionY = positionY + dy;
+              layer.height = height - _dy;
+              layer.positionY = positionY + _dy;
             }
           }
 
