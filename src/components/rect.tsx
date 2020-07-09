@@ -65,8 +65,8 @@ export const Rect: React.FC<RectProps> = ({
         height={src.height}
         x={src.positionX}
         y={src.positionY}
-        fill="none"
-        stroke={src.isSelected ? "rgb(36, 136,253)" : "black"}
+        fill={src.isHitted ? "rgba(36, 136, 253, .1)" : "none"}
+        stroke={src.isSelected ? "rgb(36, 136, 253)" : "black"}
         strokeWidth="1"
       />
       {src.isSelected && (

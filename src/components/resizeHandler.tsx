@@ -59,7 +59,7 @@ export const ResizeHandler: React.FC<RectProps> = ({
     <g>
       <rect
         fill="white"
-        stroke="rgb(36, 136,253)"
+        stroke="rgb(36, 136, 253)"
         strokeWidth="1"
         width={HANDLE_SIZE}
         height={HANDLE_SIZE}

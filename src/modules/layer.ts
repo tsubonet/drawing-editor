@@ -71,6 +71,7 @@ export const initialState = {
       positionY: 100,
       rotate: 0,
       isSelected: false,
+      isHitted: false,
     },
     {
       id: 2,
@@ -80,6 +81,7 @@ export const initialState = {
       positionY: 300,
       rotate: 0,
       isSelected: false,
+      isHitted: false,
     },
   ],
   initialTransforms: {},
@@ -130,6 +132,11 @@ export const reducer = (
     case "layer/dragEnded": {
       const initialTransforms = {};
       const snapGuides = {};
+
+      state.layers.forEach((layer) => {
+        layer.isHitted = false;
+      });
+
       return { ...state, initialTransforms, snapGuides };
     }
 
@@ -170,6 +177,7 @@ export const reducer = (
               layer.positionX,
               layer.positionX + layer.width,
             ];
+            _layer.isHitted = false;
 
             if (hitPosX.includes(layer.positionX)) {
               snapGuides.vLine = {
@@ -178,6 +186,7 @@ export const reducer = (
                 y1: Math.min(...linePosY) - 40,
                 y2: Math.max(...linePosY) + 40,
               };
+              _layer.isHitted = true;
             }
 
             if (hitPosX.includes(layer.positionX + layer.width)) {
@@ -187,6 +196,7 @@ export const reducer = (
                 y1: Math.min(...linePosY) - 40,
                 y2: Math.max(...linePosY) + 40,
               };
+              _layer.isHitted = true;
             }
 
             if (hitPosX.includes(layer.positionX + layer.width / 2)) {
@@ -196,6 +206,7 @@ export const reducer = (
                 y1: Math.min(...linePosY) - 40,
                 y2: Math.max(...linePosY) + 40,
               };
+              _layer.isHitted = true;
             }
 
             if (hitPosY.includes(layer.positionY)) {
@@ -205,6 +216,7 @@ export const reducer = (
                 y1: layer.positionY,
                 y2: layer.positionY,
               };
+              _layer.isHitted = true;
             }
 
             if (hitPosY.includes(layer.positionY + layer.height)) {
@@ -214,6 +226,7 @@ export const reducer = (
                 y1: layer.positionY + layer.height,
                 y2: layer.positionY + layer.height,
               };
+              _layer.isHitted = true;
             }
 
             if (hitPosY.includes(layer.positionY + layer.height / 2)) {
@@ -223,6 +236,7 @@ export const reducer = (
                 y1: layer.positionY + layer.height / 2,
                 y2: layer.positionY + layer.height / 2,
               };
+              _layer.isHitted = true;
             }
           });
         }
@@ -302,6 +316,7 @@ export const reducer = (
         positionY: maxPositionY > 0 ? maxPositionY + 30 : 30,
         rotate: 0,
         isSelected: false,
+        isHitted: false,
       };
       const layers = [...state.layers, createdLayer];
       console.log(layers);

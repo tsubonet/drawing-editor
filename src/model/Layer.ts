@@ -13,4 +13,5 @@ export interface Layer {
   positionY: Pixel;
   rotate: Degree;
   isSelected: boolean;
+  isHitted: boolean;
 }
