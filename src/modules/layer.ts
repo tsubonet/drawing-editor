@@ -264,7 +264,7 @@ export const reducer = (
             } else if (keepAspectRatio && posX === "left") {
               layer.height = ((width - _dx) / width) * height;
             } else {
-              layer.height = height - _dy;
+              layer.height = height + _dy;
             }
           } else if (posY === "top") {
             if (keepAspectRatio && posX === "right") {
