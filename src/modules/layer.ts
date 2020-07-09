@@ -95,10 +95,10 @@ export const reducer = (
   switch (action.type) {
     case "layer/dragStarted": {
       const { e, id } = action.payload;
+      const initialTransforms: Record<Layer["id"], Transform> = {};
 
-      let layers: Layer[];
-      if (e.shiftKey) {
-        layers = state.layers.map((layer) => {
+      const layers = state.layers.map((layer) => {
+        if (e.shiftKey) {
           if (layer.id === id) {
             return {
               ...layer,
@@ -106,14 +106,14 @@ export const reducer = (
             };
           }
           return layer;
-        });
-      } else {
-        layers = state.layers.map((layer) => ({
-          ...layer,
-          isSelected: layer.id === id,
-        }));
-      }
-      const initialTransforms: Record<Layer["id"], Transform> = {};
+        } else {
+          return {
+            ...layer,
+            isSelected: layer.id === id,
+          };
+        }
+      });
+
       layers
         .filter((layer) => layer.isSelected)
         .forEach((layer) => {
@@ -319,7 +319,6 @@ export const reducer = (
         isHitted: false,
       };
       const layers = [...state.layers, createdLayer];
-      console.log(layers);
       return { ...state, layers };
     }
 
