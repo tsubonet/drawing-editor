@@ -12,6 +12,7 @@ export interface Layer {
   positionX: Pixel;
   positionY: Pixel;
   rotate: Degree;
+  text?: string;
   isSelected: boolean;
   isHitted: boolean;
   isTextEditing: boolean;

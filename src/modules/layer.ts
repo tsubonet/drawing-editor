@@ -29,6 +29,9 @@ export const textEditStarted = (
   id?: Layer["id"],
 ) => action("layer/textEditStarted", { e, id });
 
+export const textChanged = (value: string) =>
+  action("layer/textChanged", { value });
+
 const action = <T extends string, P>(type: T, payload: P) => ({
   type,
   payload,
@@ -42,7 +45,8 @@ type Actions =
   | ReturnType<typeof rotated>
   | ReturnType<typeof created>
   | ReturnType<typeof deleted>
-  | ReturnType<typeof textEditStarted>;
+  | ReturnType<typeof textEditStarted>
+  | ReturnType<typeof textChanged>;
 
 type Transform = Pick<
   Layer,
@@ -76,6 +80,7 @@ export const initialState = {
       positionX: 100,
       positionY: 100,
       rotate: 0,
+      text: "hello world",
       isSelected: false,
       isHitted: false,
       isTextEditing: false,
@@ -349,6 +354,18 @@ export const reducer = (
         if (layer.id === id) {
           layer.isTextEditing = true;
           layer.isSelected = false;
+        }
+        return layer;
+      });
+      return { ...state, layers };
+    }
+
+    case "layer/textChanged": {
+      const { value } = action.payload;
+
+      const layers = state.layers.map((layer) => {
+        if (layer.isTextEditing) {
+          layer.text = value;
         }
         return layer;
       });

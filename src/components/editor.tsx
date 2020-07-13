@@ -13,6 +13,7 @@ import {
   created,
   deleted,
   textEditStarted,
+  textChanged,
   SnapGuides,
 } from "../modules/layer";
 
@@ -48,6 +49,10 @@ const Editor: React.FC<{}> = () => {
 
   const onTextEditStarted = (e: React.MouseEvent, layerId: number) => {
     dispatch(textEditStarted(e, layerId));
+  };
+
+  const onTextChanged = (value: string) => {
+    dispatch(textChanged(value));
   };
 
   React.useEffect(() => {
@@ -86,6 +91,7 @@ const Editor: React.FC<{}> = () => {
             onResized={onResized}
             onRotated={onRotated}
             onTextEditStarted={onTextEditStarted}
+            onTextChanged={onTextChanged}
           />
         ))}
         {Object.keys(state.snapGuides).map((key, i) => (

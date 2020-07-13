@@ -2,6 +2,7 @@ import * as React from "react";
 import { Layer, Pixel, PosX, PosY, Radian } from "../model/layer";
 import { ResizeHandler } from "./resizeHandler";
 import { RotateHandler } from "./rotateHandler";
+import { InputField } from "./inputField";
 import { useDrag } from "../utils/drag";
 
 interface RectProps {
@@ -18,6 +19,7 @@ interface RectProps {
   ) => void;
   onRotated: (nextTheta: Radian) => void;
   onTextEditStarted: (e: React.MouseEvent, layerId: number) => void;
+  onTextChanged: (value: string) => void;
 }
 
 export const Rect: React.FC<RectProps> = ({
@@ -28,6 +30,7 @@ export const Rect: React.FC<RectProps> = ({
   onResized,
   onRotated,
   onTextEditStarted,
+  onTextChanged,
 }) => {
   const ref = useDrag(
     (e) => onDragStart(e, src.id),
@@ -60,9 +63,9 @@ export const Rect: React.FC<RectProps> = ({
         src.positionY + src.height / 2
       })`}
       onDoubleClick={(e) => onTextEditStarted(e, src.id)}
+      ref={ref}
     >
       <rect
-        ref={ref}
         style={{ pointerEvents: "visible" }}
         width={src.width}
         height={src.height}
@@ -72,7 +75,7 @@ export const Rect: React.FC<RectProps> = ({
         stroke={src.isSelected ? "rgb(36, 136, 253)" : "black"}
         strokeWidth="1"
       />
-      {src.isTextEditing && (
+      {src.text && !src.isTextEditing && (
         <foreignObject
           width={src.width}
           height={src.height}
@@ -80,8 +83,11 @@ export const Rect: React.FC<RectProps> = ({
           y={src.positionY}
           requiredExtensions="http://www.w3.org/1999/xhtml"
         >
-          <input />
+          <span>{src.text}</span>
         </foreignObject>
+      )}
+      {src.isTextEditing && (
+        <InputField src={src} onTextChanged={onTextChanged} />
       )}
       {src.isSelected && (
         <g>
