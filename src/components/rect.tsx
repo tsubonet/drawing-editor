@@ -17,6 +17,7 @@ interface RectProps {
     posY: PosY,
   ) => void;
   onRotated: (nextTheta: Radian) => void;
+  onTextEditStarted: (e: React.MouseEvent, layerId: number) => void;
 }
 
 export const Rect: React.FC<RectProps> = ({
@@ -26,6 +27,7 @@ export const Rect: React.FC<RectProps> = ({
   onMoved,
   onResized,
   onRotated,
+  onTextEditStarted,
 }) => {
   const ref = useDrag(
     (e) => onDragStart(e, src.id),
@@ -57,6 +59,7 @@ export const Rect: React.FC<RectProps> = ({
       transform={`rotate(${src.rotate}, ${src.positionX + src.width / 2}, ${
         src.positionY + src.height / 2
       })`}
+      onDoubleClick={(e) => onTextEditStarted(e, src.id)}
     >
       <rect
         ref={ref}
@@ -69,6 +72,17 @@ export const Rect: React.FC<RectProps> = ({
         stroke={src.isSelected ? "rgb(36, 136, 253)" : "black"}
         strokeWidth="1"
       />
+      {src.isTextEditing && (
+        <foreignObject
+          width={src.width}
+          height={src.height}
+          x={src.positionX}
+          y={src.positionY}
+          requiredExtensions="http://www.w3.org/1999/xhtml"
+        >
+          <input />
+        </foreignObject>
+      )}
       {src.isSelected && (
         <g>
           {ResizeHandlers}

@@ -24,6 +24,11 @@ export const created = () => action("layer/created", {});
 
 export const deleted = () => action("layer/deleted", {});
 
+export const textEditStarted = (
+  e: React.MouseEvent | PointerEvent,
+  id?: Layer["id"],
+) => action("layer/textEditStarted", { e, id });
+
 const action = <T extends string, P>(type: T, payload: P) => ({
   type,
   payload,
@@ -36,7 +41,8 @@ type Actions =
   | ReturnType<typeof resized>
   | ReturnType<typeof rotated>
   | ReturnType<typeof created>
-  | ReturnType<typeof deleted>;
+  | ReturnType<typeof deleted>
+  | ReturnType<typeof textEditStarted>;
 
 type Transform = Pick<
   Layer,
@@ -72,6 +78,7 @@ export const initialState = {
       rotate: 0,
       isSelected: false,
       isHitted: false,
+      isTextEditing: false,
     },
     {
       id: 2,
@@ -82,6 +89,7 @@ export const initialState = {
       rotate: 0,
       isSelected: false,
       isHitted: false,
+      isTextEditing: false,
     },
   ],
   initialTransforms: {},
@@ -98,6 +106,7 @@ export const reducer = (
       const initialTransforms: Record<Layer["id"], Transform> = {};
 
       const layers = state.layers.map((layer) => {
+        layer.isTextEditing = false;
         if (e.shiftKey) {
           if (layer.id === id) {
             return {
@@ -322,6 +331,7 @@ export const reducer = (
         rotate: 0,
         isSelected: false,
         isHitted: false,
+        isTextEditing: false,
       };
       const layers = [...state.layers, createdLayer];
       return { ...state, layers };
@@ -329,6 +339,19 @@ export const reducer = (
 
     case "layer/deleted": {
       const layers = state.layers.filter((layer) => !layer.isSelected);
+      return { ...state, layers };
+    }
+
+    case "layer/textEditStarted": {
+      const { id } = action.payload;
+
+      const layers = state.layers.map((layer) => {
+        if (layer.id === id) {
+          layer.isTextEditing = true;
+          layer.isSelected = false;
+        }
+        return layer;
+      });
       return { ...state, layers };
     }
 

@@ -12,6 +12,7 @@ import {
   rotated,
   created,
   deleted,
+  textEditStarted,
   SnapGuides,
 } from "../modules/layer";
 
@@ -45,6 +46,10 @@ const Editor: React.FC<{}> = () => {
     dispatch(rotated(nextTheta));
   };
 
+  const onTextEditStarted = (e: React.MouseEvent, layerId: number) => {
+    dispatch(textEditStarted(e, layerId));
+  };
+
   React.useEffect(() => {
     document.addEventListener("keydown", (e) => {
       if (e.keyCode == 8) {
@@ -54,6 +59,7 @@ const Editor: React.FC<{}> = () => {
 
     document.addEventListener("pointerdown", (e) => {
       dispatch(dragStarted(e));
+      dispatch(textEditStarted(e));
     });
   }, []);
 
@@ -79,6 +85,7 @@ const Editor: React.FC<{}> = () => {
             onMoved={onMoved}
             onResized={onResized}
             onRotated={onRotated}
+            onTextEditStarted={onTextEditStarted}
           />
         ))}
         {Object.keys(state.snapGuides).map((key, i) => (

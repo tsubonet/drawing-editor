@@ -14,4 +14,5 @@ export interface Layer {
   rotate: Degree;
   isSelected: boolean;
   isHitted: boolean;
+  isTextEditing: boolean;
 }
