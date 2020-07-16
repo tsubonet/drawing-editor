@@ -24,10 +24,8 @@ export const created = () => action("layer/created", {});
 
 export const deleted = () => action("layer/deleted", {});
 
-export const textEditStarted = (
-  e: React.MouseEvent | PointerEvent,
-  id?: Layer["id"],
-) => action("layer/textEditStarted", { e, id });
+export const textEditStarted = (id?: Layer["id"]) =>
+  action("layer/textEditStarted", { id });
 
 export const textChanged = (value: string) =>
   action("layer/textChanged", { value });
@@ -351,6 +349,7 @@ export const reducer = (
       const { id } = action.payload;
 
       const layers = state.layers.map((layer) => {
+        layer.isTextEditing = false;
         if (layer.id === id) {
           layer.isTextEditing = true;
           layer.isSelected = false;

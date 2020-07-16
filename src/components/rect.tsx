@@ -18,7 +18,7 @@ interface RectProps {
     posY: PosY,
   ) => void;
   onRotated: (nextTheta: Radian) => void;
-  onTextEditStarted: (e: React.MouseEvent, layerId: number) => void;
+  onTextEditStarted: (layerId?: number) => void;
   onTextChanged: (value: string) => void;
 }
 
@@ -62,7 +62,7 @@ export const Rect: React.FC<RectProps> = ({
       transform={`rotate(${src.rotate}, ${src.positionX + src.width / 2}, ${
         src.positionY + src.height / 2
       })`}
-      onDoubleClick={(e) => onTextEditStarted(e, src.id)}
+      onDoubleClick={() => onTextEditStarted(src.id)}
       ref={ref}
     >
       <rect
@@ -79,15 +79,19 @@ export const Rect: React.FC<RectProps> = ({
         <foreignObject
           width={src.width}
           height={src.height}
-          x={src.positionX}
-          y={src.positionY}
+          x={src.positionX + 10}
+          y={src.positionY + 10}
           requiredExtensions="http://www.w3.org/1999/xhtml"
         >
           <span>{src.text}</span>
         </foreignObject>
       )}
       {src.isTextEditing && (
-        <InputField src={src} onTextChanged={onTextChanged} />
+        <InputField
+          src={src}
+          onTextChanged={onTextChanged}
+          onTextEditStarted={onTextEditStarted}
+        />
       )}
       {src.isSelected && (
         <g>

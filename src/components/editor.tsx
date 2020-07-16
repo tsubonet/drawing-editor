@@ -47,8 +47,8 @@ const Editor: React.FC<{}> = () => {
     dispatch(rotated(nextTheta));
   };
 
-  const onTextEditStarted = (e: React.MouseEvent, layerId: number) => {
-    dispatch(textEditStarted(e, layerId));
+  const onTextEditStarted = (layerId: number) => {
+    dispatch(textEditStarted(layerId));
   };
 
   const onTextChanged = (value: string) => {
@@ -64,7 +64,7 @@ const Editor: React.FC<{}> = () => {
 
     document.addEventListener("pointerdown", (e) => {
       dispatch(dragStarted(e));
-      dispatch(textEditStarted(e));
+      dispatch(textEditStarted());
     });
   }, []);
 
