@@ -34,17 +34,6 @@ type KnownActions<
   A extends Record<string, (...args: any[]) => any>
 > = ReturnType<A[keyof A]>;
 
-type Actions =
-  | ReturnType<typeof dragStarted>
-  | ReturnType<typeof dragEnded>
-  | ReturnType<typeof moved>
-  | ReturnType<typeof resized>
-  | ReturnType<typeof rotated>
-  | ReturnType<typeof created>
-  | ReturnType<typeof deleted>
-  | ReturnType<typeof textEditStarted>
-  | ReturnType<typeof textChanged>;
-
 type Transform = Pick<
   Layer,
   "width" | "height" | "positionX" | "positionY" | "rotate"
@@ -100,7 +89,7 @@ export const initialState = {
 
 export const reducer = (
   state: State = initialState,
-  action: Actions,
+  action: KnownActions<typeof LayerAction>,
 ): State => {
   switch (action.type) {
     case "layer/dragStarted": {
