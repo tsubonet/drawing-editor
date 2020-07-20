@@ -17,7 +17,7 @@ interface RectProps {
     posX: PosX,
     posY: PosY,
   ) => void;
-  onRotated: (nextTheta: Radian) => void;
+  onRotated: (layerId: number, x: Pixel, y: Pixel) => void;
   onTextEditStarted: (layerId?: number) => void;
   onTextChanged: (value: string) => void;
 }

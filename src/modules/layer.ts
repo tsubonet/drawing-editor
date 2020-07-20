@@ -1,39 +1,38 @@
-import { Layer, Pixel, PosX, PosY, Radian } from "../model/layer";
-import { radianToDeg, transformRotate } from "../utils/layer";
+import { Layer, Pixel, PosX, PosY } from "../model/layer";
+import { radian2degree, transformRotate } from "../utils/layer";
 
-export const dragStarted = (e: PointerEvent, id?: Layer["id"]) =>
-  action("layer/dragStarted", { e, id });
+export const LayerAction = {
+  dragStarted: (e: PointerEvent, id?: Layer["id"]) =>
+    action("layer/dragStarted", { e, id }),
 
-export const dragEnded = () => action("layer/dragEnded", {});
+  dragEnded: () => action("layer/dragEnded", {}),
 
-export const moved = (dx: Pixel, dy: Pixel) =>
-  action("layer/moved", { dx, dy });
+  moved: (dx: Pixel, dy: Pixel) => action("layer/moved", { dx, dy }),
 
-export const resized = (
-  e: PointerEvent,
-  dx: Pixel,
-  dy: Pixel,
-  posX: PosX,
-  posY: PosY,
-) => action("layer/resized", { e, dx, dy, posX, posY });
+  resized: (e: PointerEvent, dx: Pixel, dy: Pixel, posX: PosX, posY: PosY) =>
+    action("layer/resized", { e, dx, dy, posX, posY }),
 
-export const rotated = (nextTheta: Radian) =>
-  action("layer/rotated", { nextTheta });
+  rotated: (id: Layer["id"], x: Pixel, y: Pixel) =>
+    action("layer/rotated", { id, x, y }),
 
-export const created = () => action("layer/created", {});
+  created: () => action("layer/created", {}),
 
-export const deleted = () => action("layer/deleted", {});
+  deleted: () => action("layer/deleted", {}),
 
-export const textEditStarted = (id?: Layer["id"]) =>
-  action("layer/textEditStarted", { id });
+  textEditStarted: (id?: Layer["id"]) =>
+    action("layer/textEditStarted", { id }),
 
-export const textChanged = (value: string) =>
-  action("layer/textChanged", { value });
+  textChanged: (value: string) => action("layer/textChanged", { value }),
+};
 
 const action = <T extends string, P>(type: T, payload: P) => ({
   type,
   payload,
 });
+
+type KnownActions<
+  A extends Record<string, (...args: any[]) => any>
+> = ReturnType<A[keyof A]>;
 
 type Actions =
   | ReturnType<typeof dragStarted>
@@ -304,13 +303,22 @@ export const reducer = (
     }
 
     case "layer/rotated": {
-      const { nextTheta } = action.payload;
-      const nextDegree = radianToDeg(nextTheta);
+      const { id, x, y } = action.payload;
 
       const layers = state.layers.map((layer) => {
         const transform = state.initialTransforms[layer.id];
         if (transform) {
-          layer.rotate = nextDegree + 90;
+          const cx = transform.positionX + transform.width / 2;
+          const cy = transform.positionY + transform.height / 2;
+
+          /** θ の隣辺の長さ( x 方向) */
+          const vx = x - cx;
+          /** θ の対辺の長さ( y 方向) */
+          const vy = y - cy;
+          /** θ: 回転角(ラジアン) */
+          const nextTheta = Math.atan2(vy, vx);
+
+          layer.rotate = radian2degree(nextTheta) + 90;
         }
         return layer;
       });

@@ -1,19 +1,11 @@
 import * as React from "react";
 import { useWindowSize } from "../utils/windowSize";
-import { PosX, PosY } from "../model/layer";
+import { PosX, PosY, Pixel } from "../model/layer";
 import { Rect } from "./Rect";
 import {
   reducer,
   initialState,
-  dragStarted,
-  dragEnded,
-  moved,
-  resized,
-  rotated,
-  created,
-  deleted,
-  textEditStarted,
-  textChanged,
+  LayerAction,
   SnapGuides,
 } from "../modules/layer";
 
@@ -22,56 +14,56 @@ const Editor: React.FC<{}> = () => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const onDragStart = (e: PointerEvent, layerId: number) => {
-    dispatch(dragStarted(e, layerId));
+    dispatch(LayerAction.dragStarted(e, layerId));
   };
 
   const onDragEnd = () => {
-    dispatch(dragEnded());
+    dispatch(LayerAction.dragEnded());
   };
 
-  const onMoved = (dx: number, dy: number) => {
-    dispatch(moved(dx, dy));
+  const onMoved = (dx: Pixel, dy: Pixel) => {
+    dispatch(LayerAction.moved(dx, dy));
   };
 
   const onResized = (
     e: PointerEvent,
-    dx: number,
-    dy: number,
+    dx: Pixel,
+    dy: Pixel,
     posX: PosX,
     posY: PosY,
   ) => {
-    dispatch(resized(e, dx, dy, posX, posY));
+    dispatch(LayerAction.resized(e, dx, dy, posX, posY));
   };
 
-  const onRotated = (nextTheta: number) => {
-    dispatch(rotated(nextTheta));
+  const onRotated = (layerId: number, x: Pixel, y: Pixel) => {
+    dispatch(LayerAction.rotated(layerId, x, y));
   };
 
   const onTextEditStarted = (layerId: number) => {
-    dispatch(textEditStarted(layerId));
+    dispatch(LayerAction.textEditStarted(layerId));
   };
 
   const onTextChanged = (value: string) => {
-    dispatch(textChanged(value));
+    dispatch(LayerAction.textChanged(value));
   };
 
   React.useEffect(() => {
     document.addEventListener("keydown", (e) => {
       if (e.keyCode == 8) {
-        dispatch(deleted());
+        dispatch(LayerAction.deleted());
       }
     });
 
     document.addEventListener("pointerdown", (e) => {
-      dispatch(dragStarted(e));
-      dispatch(textEditStarted());
+      dispatch(LayerAction.dragStarted(e));
+      dispatch(LayerAction.textEditStarted());
     });
   }, []);
 
   return (
     <div>
       <button
-        onClick={() => dispatch(created())}
+        onClick={() => dispatch(LayerAction.created())}
         style={{ position: "absolute", top: "10px", left: "10px" }}
       >
         +

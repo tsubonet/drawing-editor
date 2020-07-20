@@ -1,12 +1,12 @@
 import * as React from "react";
-import { Layer, Radian } from "../model/layer";
+import { Layer, Pixel } from "../model/layer";
 import { useDrag } from "../utils/drag";
 
 interface RectProps {
   src: Layer;
   onDragStart: (e: PointerEvent, layerId: number) => void;
   onDragEnd: () => void;
-  onRotated: (nextTheta: Radian) => void;
+  onRotated: (layerId: number, x: Pixel, y: Pixel) => void;
 }
 
 export const RotateHandler: React.FC<RectProps> = ({
@@ -23,12 +23,7 @@ export const RotateHandler: React.FC<RectProps> = ({
   const ref = useDrag<SVGRectElement>(
     (e) => onDragStart(e, id),
     () => onDragEnd(),
-    (e, dx, dy, x, y) => {
-      const vx = x - cx;
-      const vy = y - cy;
-      const nextTheta = Math.atan2(vy, vx);
-      onRotated(nextTheta);
-    },
+    (e, dx, dy, x, y) => onRotated(id, x, y),
   );
 
   return (
