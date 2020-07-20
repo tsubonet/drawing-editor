@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Pixel } from "../model/layer";
 
-class Draggable {
+class Draggable<E extends SVGElement> {
   private initialTouch: { x: Pixel; y: Pixel } | null = null;
 
   constructor(
-    private element: SVGRectElement,
+    private element: E,
     private onDragStart: (e: PointerEvent) => void,
     private onDragEnd: () => void,
     private onMove: (
@@ -61,12 +61,12 @@ class Draggable {
   };
 }
 
-export const useDrag = (
+export const useDrag = <E extends SVGElement>(
   onDragStart: (e: PointerEvent) => void,
   onDragEnd: () => void,
   onMove: (e: PointerEvent, dx: number, dy: number, x: Pixel, y: Pixel) => void,
 ) => {
-  const ref = React.useRef<SVGRectElement | null>(null);
+  const ref = React.useRef<E | null>(null);
 
   React.useEffect(() => {
     const draggable = new Draggable(

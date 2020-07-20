@@ -29,7 +29,7 @@ export const ResizeHandler: React.FC<RectProps> = ({
 }) => {
   const { id, positionX, positionY, width, height } = src;
 
-  const ref = useDrag(
+  const ref = useDrag<SVGRectElement>(
     (e) => onDragStart(e, id),
     () => onDragEnd(),
     (e, dx, dy, x, y) => onResized(e, dx, dy, posX, posY),

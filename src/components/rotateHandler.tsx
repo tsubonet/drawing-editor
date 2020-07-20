@@ -20,7 +20,7 @@ export const RotateHandler: React.FC<RectProps> = ({
   const cx = positionX + width / 2;
   const cy = positionY + height / 2;
 
-  const ref = useDrag(
+  const ref = useDrag<SVGRectElement>(
     (e) => onDragStart(e, id),
     () => onDragEnd(),
     (e, dx, dy, x, y) => {

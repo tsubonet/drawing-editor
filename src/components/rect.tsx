@@ -32,7 +32,7 @@ export const Rect: React.FC<RectProps> = ({
   onTextEditStarted,
   onTextChanged,
 }) => {
-  const ref = useDrag(
+  const ref = useDrag<SVGSVGElement>(
     (e) => onDragStart(e, src.id),
     () => onDragEnd(),
     (e, dx, dy) => onMoved(dx, dy),
@@ -58,52 +58,53 @@ export const Rect: React.FC<RectProps> = ({
   );
 
   return (
-    <g
-      transform={`rotate(${src.rotate}, ${src.positionX + src.width / 2}, ${
-        src.positionY + src.height / 2
-      })`}
-      onDoubleClick={() => onTextEditStarted(src.id)}
-      ref={ref}
-    >
-      <rect
-        style={{ pointerEvents: "visible" }}
-        width={src.width}
-        height={src.height}
-        x={src.positionX}
-        y={src.positionY}
-        fill={src.isHitted ? "rgba(36, 136, 253, .1)" : "none"}
-        stroke={src.isSelected ? "rgb(36, 136, 253)" : "black"}
-        strokeWidth="1"
-      />
-      {src.text && !src.isTextEditing && (
-        <foreignObject
+    <svg ref={ref}>
+      <g
+        transform={`rotate(${src.rotate}, ${src.positionX + src.width / 2}, ${
+          src.positionY + src.height / 2
+        })`}
+        onDoubleClick={() => onTextEditStarted(src.id)}
+      >
+        <rect
+          style={{ pointerEvents: "visible" }}
           width={src.width}
           height={src.height}
-          x={src.positionX + 10}
-          y={src.positionY + 10}
-          requiredExtensions="http://www.w3.org/1999/xhtml"
-        >
-          <span>{src.text}</span>
-        </foreignObject>
-      )}
-      {src.isTextEditing && (
-        <InputField
-          src={src}
-          onTextChanged={onTextChanged}
-          onTextEditStarted={onTextEditStarted}
+          x={src.positionX}
+          y={src.positionY}
+          fill={src.isHitted ? "rgba(36, 136, 253, .1)" : "none"}
+          stroke={src.isSelected ? "rgb(36, 136, 253)" : "black"}
+          strokeWidth="1"
         />
-      )}
-      {src.isSelected && (
-        <g>
-          {ResizeHandlers}
-          <RotateHandler
+        {src.text && !src.isTextEditing && (
+          <foreignObject
+            width={src.width}
+            height={src.height}
+            x={src.positionX + 10}
+            y={src.positionY + 10}
+            requiredExtensions="http://www.w3.org/1999/xhtml"
+          >
+            <span>{src.text}</span>
+          </foreignObject>
+        )}
+        {src.isTextEditing && (
+          <InputField
             src={src}
-            onDragStart={onDragStart}
-            onDragEnd={onDragEnd}
-            onRotated={onRotated}
+            onTextChanged={onTextChanged}
+            onTextEditStarted={onTextEditStarted}
           />
-        </g>
-      )}
-    </g>
+        )}
+        {src.isSelected && (
+          <g>
+            {ResizeHandlers}
+            <RotateHandler
+              src={src}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+              onRotated={onRotated}
+            />
+          </g>
+        )}
+      </g>
+    </svg>
   );
 };
