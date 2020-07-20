@@ -27,7 +27,7 @@ export const ResizeHandler: React.FC<RectProps> = ({
   onDragEnd,
   onResized,
 }) => {
-  const { id, positionX, positionY, width, height } = src;
+  const { id, width, height } = src;
 
   const ref = useDrag<SVGRectElement>(
     (e) => onDragStart(e, id),
@@ -35,14 +35,14 @@ export const ResizeHandler: React.FC<RectProps> = ({
     (e, dx, dy, x, y) => onResized(e, dx, dy, posX, posY),
   );
 
-  let x = positionX - HANDLE_SIZE / 2;
+  let x = -HANDLE_SIZE / 2;
   if (posX === "center") {
     x += width / 2;
   } else if (posX === "right") {
     x += width;
   }
 
-  let y = positionY - HANDLE_SIZE / 2;
+  let y = -HANDLE_SIZE / 2;
   if (posY === "middle") {
     y += height / 2;
   } else if (posY === "bottom") {

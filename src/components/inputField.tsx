@@ -16,12 +16,13 @@ export const InputField: React.FC<RectProps> = ({
   React.useEffect(() => {
     ref.current?.focus();
   }, []);
+  const PADDING = 10;
   return (
     <foreignObject
-      width={src.width}
-      height={src.height}
-      x={src.positionX + 10}
-      y={src.positionY + 10}
+      width={src.width - PADDING}
+      height={src.height - PADDING}
+      x={PADDING}
+      y={PADDING}
       requiredExtensions="http://www.w3.org/1999/xhtml"
     >
       <input

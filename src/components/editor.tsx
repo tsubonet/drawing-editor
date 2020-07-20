@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useWindowSize } from "../utils/windowSize";
 import { PosX, PosY } from "../model/layer";
-import { Rect } from "./rect";
+import { Rect } from "./Rect";
 import {
   reducer,
   initialState,

@@ -15,10 +15,10 @@ export const RotateHandler: React.FC<RectProps> = ({
   onDragEnd,
   onRotated,
 }) => {
-  const { id, positionX, positionY, width, height } = src;
+  const { id, width, height } = src;
 
-  const cx = positionX + width / 2;
-  const cy = positionY + height / 2;
+  const cx = width / 2;
+  const cy = height / 2;
 
   const ref = useDrag<SVGRectElement>(
     (e) => onDragStart(e, id),
@@ -32,11 +32,7 @@ export const RotateHandler: React.FC<RectProps> = ({
   );
 
   return (
-    <g
-      transform={`translate(${cx - 9}, ${
-        positionY - 24.5
-      }) scale(1.3333333333)`}
-    >
+    <g transform={`translate(${cx - 9}, -24.5) scale(1.3333333333)`}>
       <line
         x1="7"
         y1="11"

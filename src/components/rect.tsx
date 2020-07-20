@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Layer, Pixel, PosX, PosY, Radian } from "../model/layer";
-import { ResizeHandler } from "./resizeHandler";
-import { RotateHandler } from "./rotateHandler";
-import { InputField } from "./inputField";
+import { ResizeHandler } from "./ResizeHandler";
+import { RotateHandler } from "./RotateHandler";
+import { InputField } from "./InputField";
 import { useDrag } from "../utils/drag";
 
 interface RectProps {
@@ -57,30 +57,36 @@ export const Rect: React.FC<RectProps> = ({
     }),
   );
 
+  const PADDING = 10;
+
   return (
-    <svg ref={ref}>
+    <svg
+      ref={ref}
+      viewBox={`0 0 ${src.width} ${src.height}`}
+      width={src.width}
+      height={src.height}
+      x={src.positionX}
+      y={src.positionY}
+      overflow="visible"
+    >
       <g
-        transform={`rotate(${src.rotate}, ${src.positionX + src.width / 2}, ${
-          src.positionY + src.height / 2
-        })`}
+        transform={`rotate(${src.rotate}, ${src.width / 2}, ${src.height / 2})`}
         onDoubleClick={() => onTextEditStarted(src.id)}
       >
         <rect
           style={{ pointerEvents: "visible" }}
           width={src.width}
           height={src.height}
-          x={src.positionX}
-          y={src.positionY}
           fill={src.isHitted ? "rgba(36, 136, 253, .1)" : "none"}
           stroke={src.isSelected ? "rgb(36, 136, 253)" : "black"}
           strokeWidth="1"
         />
         {src.text && !src.isTextEditing && (
           <foreignObject
-            width={src.width}
-            height={src.height}
-            x={src.positionX + 10}
-            y={src.positionY + 10}
+            width={src.width - PADDING}
+            height={src.height - PADDING}
+            x={PADDING}
+            y={PADDING}
             requiredExtensions="http://www.w3.org/1999/xhtml"
           >
             <span>{src.text}</span>
